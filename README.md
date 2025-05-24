@@ -1,7 +1,7 @@
 # [My Personal Resume Webpage](https://resume.76448.in)
 
 ![visitors](https://visitor-badge.laobi.icu/badge?page_id=srijan-76448/Resume)
-![Webpage visitors](https://visitor-badge.glitch.me/badge?page_id=resume.76448.in)
+![Website Visitors](https://visitor-badge.laobi.icu/badge?page_id=resume.76448.in)
 
 This is a personal resume webpage, a simple static site designed to display my profile, projects, skills, etc. All the content is managed from a single JSON file, making it easy to update.
 
