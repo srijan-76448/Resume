@@ -1,0 +1,132 @@
+{
+    "personalInfo": {
+        "email": "srijan.76448@gmail.com",
+        "phone1": "+91 70593 43651",
+        "phone2": "+91 94336 42433",
+        "website": {
+            "url": "https://srijan.76448.in",
+            "display": "srijan.76448.in"
+        }
+    },
+    "summary": "A highly motivated and results-oriented Software Engineer with a passion for developing innovative solutions. Proven ability to design, implement, and deploy high-quality hardware and software projects. Expertise in _GNU/Linux_, _IoT_, _Robotics_, _Schematic Designing_, _3D Designing_, _PCB Designing_. Strong track record of project success and a commitment to continuous learning.",
+    "skills": {
+        "Programming Languages": [
+            "Python",
+            "C",
+            "C++",
+            "Shell Scripting",
+            "Assembly Scripting",
+            "Lua"
+        ],
+        "Design": [
+            "3D Designing",
+            "PCB Designing",
+            "Schematic Designing"
+        ],
+        "Frameworks": [
+            "OpenCV",
+            "Django"
+        ],
+        "Editors": [
+            "Gimp",
+            "Blender",
+            "AutoCAD"
+        ],
+        "AI/ML Libraries": [
+            "Keras",
+            "Matplotlib",
+            "NumPy",
+            "Pandas",
+            "PyTorch",
+            "scikit-learn",
+            "TensorFlow"
+        ],
+        "IoT Frameworks & Devices": [
+            "Arduino",
+            "ATmega328P-U",
+            "ATtiny85",
+            "ESP32",
+            "ESP8266",
+            "Raspberry Pi"
+        ],
+        "Tools & Databases": [
+            "SQL",
+            "Git",
+            "GitHub",
+            "GitLab"
+        ],
+        "Others": [
+            "PiHole",
+            "HomeAssistant",
+            "Twilio",
+            "Linux System Administration",
+            "Linux Server Administration",
+            "Cyber Security"
+        ]
+    },
+    "projects": {
+        "ISHA (Interactive Smart Home Assistant)": {
+            "link": "https://github.com/srijan-76448/ISHA",
+            "timeline": "2024-Present",
+            "descripton": "*ISHA* is an innovative AI assistant designed to revolutionize the way you interact with technology. As a versatile and intelligent companion, *ISHA* can assist you with a wide range of tasks, from simple queries to complex problem-solving, Smart Home Automation.",
+            "features": {
+                "Basic Task Automation": " Schedule reminders, control smart home devices, etc...",
+                "Information Retrieval": " Answer factual questions, provide summaries of topics, etc...",
+                "Interactive Conversation": " Engage in natural language conversations in several languages.",
+                "Creative Assistance": " Helps with creative endeavors, like writing stories, poems, or scripts.",
+                "Artificial Emotional Intelligence": " Recognizes and responds to your emotions, offering support and understanding."
+            }
+        },
+        "Smart Gloves": {
+            "link": "",
+            "timeline": "2025-Present",
+            "descripton": "Developed smart gloves to capture and relay finger and hand movements to a Raspberry Pi 3B using an ESP32-S3, which latter on relays the data to a target device. The gloves are designed to be lightweight and comfortable, making them suitable for extended use. The system is powered by a rechargeable battery, ensuring portability and ease of use.",
+            "features": {
+                "Movement Capture": "Designed and implemented a system for finger and hand movement capture.",
+                "Hardware Integration": "Integrated MPU-6050 and ESP32C3.",
+                "Communication Protocol": "Developed communication protocol for data transmission to a paired device.",
+                "Technologies Used": "ESP32-C3, MPU6050, Micro-Python, BLE Protocol"
+            }
+        },
+        "DevOS EcoSystem": {
+            "link": "http://devos.76448.in/",
+            "timeline": "2022-Present",
+            "descripton": "*DevOS EcoSystem* is a unified ecosystem of Arch Linux-based operating systems engineered for seamless integration across diverse personal computing platforms, including *desktops*, *laptops*, *smartphones*, *smartwatches*, *Raspberry Pi devices*, *automobiles*, etc. Leveraging a shared core and the custom *DevPKG package manager*, DevOS provides a consistent and customizable experience while the innovative *OctaConn* feature enables effortless inter-device communication within a user's personal network.",
+            "features": {
+                "Unified Cross-Platform Architecture": "Developed a cohesive ecosystem of Arch Linux-based operating systems tailored for diverse platforms (Desktop/Laptop, Smartphone, Smartwatch, Raspberry Pi, Automobile), sharing a common core and streamlining development and user experience.",
+                "Integrated DevPKG Package Manager": "Designed and implemented a custom package manager, DevPKG, ensuring consistent software installation, updates, and management across all DevOS platforms, simplifying the user experience and system administration.",
+                "Seamless Inter-Device Communication via OctaConn": "Pioneered an innovative, passwordless inter-device communication system, OctaConn, enabling effortless resource sharing and interaction between a user's DevOS devices within a defined range, enhancing productivity and convenience.",
+                "Platform-Optimized Adaptations": "Successfully customized and optimized the Arch Linux base for the unique hardware and user interface requirements of each target platform, demonstrating expertise in kernel configuration, driver integration, and UI/UX design for diverse form factors.",
+                "Community-Driven Open Source Initiative": "Established and led an open-source project, fostering community contributions, managing collaborative development, and promoting transparency and shared ownership in the evolution of the DevOS Ecosystem."
+            }
+        }
+    },
+    "education": {
+        "BTech in Computer Science Engineering (Data Science)": {
+            "timeline": "2022-2026",
+            "description": ""
+        }
+    },
+    "socials": {
+        "GitHub": {
+            "url": "https://github.com/srijan-76448",
+            "display": "srijan-76448"
+        },
+        "Instagram": {
+            "url": "https://www.instagram.com/srijan.76448/",
+            "display": "srijan.76448"
+        },
+        "Facebook": {
+            "url": "https://www.facebook.com/srijan.76448",
+            "display": "srijan.76448"
+        },
+        "LinkedIn": {
+            "url": "https://www.linkedin.com/in/srijan76448/",
+            "display": "srijan76448"
+        },
+        "Medium": {
+            "url": "https://medium.com/@srijan-76448",
+            "display": "srijan-76448"
+        }
+    }
+}
