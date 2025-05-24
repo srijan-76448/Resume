@@ -8,9 +8,12 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <button class="theme-control" id="darkModeToggle"></button>
-
-    <h1>Srijan Bhattacharyya</h1>
+    <nav class="nav-bar">
+      <div class="nav-inner-content">
+        <h1 class="nav-name">Srijan Bhattacharyya</h1>
+      </div>
+      <button class="theme-control" id="darkModeToggle"></button>
+    </nav>
     <div id="contact-info-container"></div>
 
     <h2>Summary</h2>
@@ -76,7 +79,6 @@
         setAndStoreTheme(!isCurrentlyDark);
       });
 
-      // Function to apply formatting
       function applyTextFormatting(text) {
         let formattedText = text.replace(/\*(.*?)\*/g, "<strong>$1</strong>");
         formattedText = formattedText.replace(/_(.*?)_/g, "<em>$1</em>");
