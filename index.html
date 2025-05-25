@@ -9,10 +9,11 @@
   </head>
   <body>
     <nav class="nav-bar">
+      <div class="nav-bar-centraliser"></div>
       <div class="nav-inner-content">
-        <h1 class="nav-name">Srijan Bhattacharyya</h1>
+        <h1 class="name-tag">Srijan Bhattacharyya</h1>
       </div>
-      <button class="theme-control" id="darkModeToggle"></button>
+      <button class="theme-toggle-button" id="themeToggleButton"></button>
     </nav>
     <div id="contact-info-container"></div>
 
@@ -39,7 +40,7 @@
 
     <script>
       // Dark Mode Toggle Functionality
-      const darkModeToggle = document.getElementById("darkModeToggle");
+      const themeToggleButton = document.getElementById("themeToggleButton");
       const body = document.body;
       const sunEmoji = "☀️";
       const moonEmoji = "🌙";
@@ -47,11 +48,11 @@
       function setAndStoreTheme(isDarkMode) {
         if (isDarkMode) {
           body.classList.add("dark-mode");
-          darkModeToggle.textContent = moonEmoji;
+          themeToggleButton.textContent = moonEmoji;
           localStorage.setItem("theme", "dark");
         } else {
           body.classList.remove("dark-mode");
-          darkModeToggle.textContent = sunEmoji;
+          themeToggleButton.textContent = sunEmoji;
           localStorage.setItem("theme", "light");
         }
       }
@@ -74,7 +75,7 @@
           }
         });
 
-      darkModeToggle.addEventListener("click", () => {
+      themeToggleButton.addEventListener("click", () => {
         const isCurrentlyDark = body.classList.contains("dark-mode");
         setAndStoreTheme(!isCurrentlyDark);
       });
@@ -90,6 +91,7 @@
         fetch("info.json")
           .then((response) => response.json())
           .then((fullData) => {
+
             // Render Contact Info
             const personalInfo = fullData.personalInfo;
             const contactInfoContainer = document.getElementById(
