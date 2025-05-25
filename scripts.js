@@ -1,15 +1,12 @@
-// Add this at the beginning of your scripts.js file
+// Splash Screen
 window.addEventListener("load", function () {
   const splashScreen = document.getElementById("splash-screen");
   if (splashScreen) {
-    // Optional: Add a small delay for better user experience
     setTimeout(() => {
       splashScreen.classList.add("hidden");
-    }, 500); // Hide after 0.5 seconds
+    }, 500);
   }
 });
-
-// Existing JavaScript code below...
 
 // Dark Mode Toggle Functionality
 const themeToggleButton = document.getElementById("themeToggleButton");
@@ -50,6 +47,7 @@ themeToggleButton.addEventListener("click", () => {
   setAndStoreTheme(!isCurrentlyDark);
 });
 
+// Text formatting
 function applyTextFormatting(text) {
   let formattedText = text.replace(/\*(.*?)\*/g, "<strong>$1</strong>");
   formattedText = formattedText.replace(/_(.*?)_/g, "<em>$1</em>");
@@ -57,6 +55,7 @@ function applyTextFormatting(text) {
   return formattedText;
 }
 
+// load items from info.json
 document.addEventListener("DOMContentLoaded", function () {
   fetch("info.json")
     .then((response) => response.json())
