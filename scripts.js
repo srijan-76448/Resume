@@ -61,6 +61,7 @@ document.addEventListener("DOMContentLoaded", function () {
   fetch("info.json")
     .then((response) => response.json())
     .then((fullData) => {
+
       // Render Contact Info
       const personalInfo = fullData.personalInfo;
       const contactInfoContainer = document.getElementById(
