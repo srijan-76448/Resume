@@ -1,3 +1,16 @@
+// Add this at the beginning of your scripts.js file
+window.addEventListener("load", function () {
+  const splashScreen = document.getElementById("splash-screen");
+  if (splashScreen) {
+    // Optional: Add a small delay for better user experience
+    setTimeout(() => {
+      splashScreen.classList.add("hidden");
+    }, 500); // Hide after 0.5 seconds
+  }
+});
+
+// Existing JavaScript code below...
+
 // Dark Mode Toggle Functionality
 const themeToggleButton = document.getElementById("themeToggleButton");
 const body = document.body;
