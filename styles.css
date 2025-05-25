@@ -94,22 +94,34 @@ section {
 
 .nav-inner-content {
   display: flex;
+  background-color: var(--bg-color);
   justify-content: space-between;
   align-items: center;
   width: 100%;
   max-width: 1080px;
+  max-height: 100%;
   margin: 0 auto;
   box-sizing: border-box;
 }
 
-.nav-name {
+.name-tag {
   font-size: 28px;
   font-weight: bold;
   color: var(--heading-color);
-  margin-left: 20px;
 }
 
-.theme-control {
+.nav-bar-centraliser {
+  display: flex;
+  left: 0;
+  height: 60px;
+  background-color: transparent;
+  width: 2.78%;
+
+  justify-content: space-between;
+  align-items: center;
+}
+
+.theme-toggle-button {
   background-color: transparent;
   color: var(--text-color);
   border: none;
@@ -119,6 +131,8 @@ section {
   font-size: 28px;
   z-index: 1000;
   flex-shrink: 0;
+  width: 60px;
+  height: 60px;
 }
 
 .project-item {
