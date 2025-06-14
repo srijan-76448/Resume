@@ -66,7 +66,7 @@
     },
     "projects": {
         "ISHA (Interactive Smart Home Assistant)": {
-            "link": "https://github.com/srijan-76448/ISHA",
+            "link": "",
             "timeline": "2024-Present",
             "descripton": "*ISHA* is an innovative AI assistant designed to revolutionize the way you interact with technology. As a versatile and intelligent companion, *ISHA* can assist you with a wide range of tasks, from simple queries to complex problem-solving, Smart Home Automation.",
             "features": {
@@ -89,7 +89,7 @@
             }
         },
         "DevOS EcoSystem": {
-            "link": "http://devos.76448.in/",
+            "link": "",
             "timeline": "2022-Present",
             "descripton": "*DevOS EcoSystem* is a unified ecosystem of Arch Linux-based operating systems engineered for seamless integration across diverse personal computing platforms, including *desktops*, *laptops*, *smartphones*, *smartwatches*, *Raspberry Pi devices*, *automobiles*, etc. Leveraging a shared core and the custom *DevPKG package manager*, DevOS provides a consistent and customizable experience while the innovative *OctaConn* feature enables effortless inter-device communication within a user's personal network.",
             "features": {
