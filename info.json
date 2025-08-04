@@ -68,6 +68,7 @@
         "ISHA (Integrated Smart Home Assistant)": {
             "link": "",
             "timeline": "2024-Present",
+            "model": "",
             "descripton": "*ISHA* is an innovative AI assistant designed to revolutionize the way you interact with technology. As a versatile and intelligent companion, *ISHA* can assist you with a wide range of tasks, from simple queries to complex problem-solving, Smart Home Automation.",
             "features": {
                 "Basic Task Automation": " Schedule reminders, control smart home devices, etc...",
@@ -80,6 +81,7 @@
         "Smart Gloves": {
             "link": "",
             "timeline": "2025-Present",
+            "model": "",
             "descripton": "Developed smart gloves to capture and relay finger and hand movements to a Raspberry Pi 3B using an ESP32-S3, which latter on relays the data to a target device. The gloves are designed to be lightweight and comfortable, making them suitable for extended use. The system is powered by a rechargeable battery, ensuring portability and ease of use.",
             "features": {
                 "Movement Capture": "Designed and implemented a system for finger and hand movement capture.",
@@ -91,6 +93,7 @@
         "DevOS EcoSystem": {
             "link": "",
             "timeline": "2022-Present",
+            "model": "",
             "descripton": "*DevOS EcoSystem* is a unified ecosystem of Arch Linux-based operating systems engineered for seamless integration across diverse personal computing platforms, including *desktops*, *laptops*, *smartphones*, *smartwatches*, *Raspberry Pi devices*, *automobiles*, etc. Leveraging a shared core and the custom *DevPKG package manager*, DevOS provides a consistent and customizable experience while the innovative *OctaConn* feature enables effortless inter-device communication within a user's personal network.",
             "features": {
                 "Unified Cross-Platform Architecture": "Developed a cohesive ecosystem of Arch Linux-based operating systems tailored for diverse platforms (Desktop/Laptop, Smartphone, Smartwatch, Raspberry Pi, Automobile), sharing a common core and streamlining development and user experience.",
@@ -130,3 +133,4 @@
         }
     }
 }
+
