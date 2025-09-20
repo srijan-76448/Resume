@@ -1,0 +1,114 @@
+{
+    "user-info": {
+        "user-name": "Srijan Bhattacharyya",
+        "user-details": "Embeded Systems Engineer",
+        "user-short-description": "A highly motivated and results-oriented Software Engineer with a passion for developing innovative solutions. Proven ability to design, implement, and deploy high-quality hardware and software projects. Expertise in GNU/Linux, IoT, Robotics, Schematic Designing, 3D Designing, PCB Designing. Strong track record of project success and a commitment to continuous learning.",
+        "about-me": "I am Srijan Bhattacharyya, an Embedded Systems Engineer with a passion for creating innovative solutions that bridge the gap between hardware and software. With a strong foundation in computer science and hands-on experience in designing and implementing embedded systems, I thrive on tackling complex challenges and delivering efficient, reliable, and scalable solutions. My expertise spans across various domains including IoT, robotics, and real-time systems. I am dedicated to continuous learning and staying updated with the latest advancements in technology to ensure that my work remains at the forefront of the industry. When I'm not immersed in coding or tinkering with hardware, I enjoy exploring new technologies, contributing to open-source projects, and sharing knowledge with the tech community.",
+        "profile-pic": "assets/imgs/Face.jpg"
+    },
+    "projects": [
+        {
+            "name": "ISHA (Integrated Smart Home Assistant)",
+            "description": "ISHA is an innovative AI assistant designed to revolutionize the way you interact with technology. As a versatile and intelligent companion, ISHA can assist you with a wide range of tasks, from simple queries to complex problem-solving, Smart Home Automation.",
+            "link": "",
+            "image": ""
+        },
+        {
+            "name": "DevOS EcoSystem",
+            "description": "DevOS EcoSystem is a unified suite of operating systems for desktops, laptops, mobiles, wearables, Raspberry Pi, and cars. With a shared core, DevPKG manager, and OctaConn connectivity, it ensures seamless integration, customization, and effortless inter-device communication across different platforms.",
+            "link": "",
+            "image": ""
+        }
+    ],
+    "skills": {
+        "Programming Languages": [
+            "Python",
+            "C",
+            "C++",
+            "Shell Scripting",
+            "Assembly Scripting",
+            "Lua"
+        ],
+        "Design": [
+            "3D Designing",
+            "PCB Designing",
+            "Schematic Designing"
+        ],
+        "Frameworks": [
+            "OpenCV",
+            "Django"
+        ],
+        "Editors": [
+            "Gimp",
+            "Blender",
+            "AutoCAD"
+        ],
+        "AI/ML Libraries": [
+            "Keras",
+            "Matplotlib",
+            "NumPy",
+            "Pandas",
+            "PyTorch",
+            "scikit-learn",
+            "TensorFlow"
+        ],
+        "IoT Frameworks & Devices": [
+            "Arduino",
+            "ATmega328P-U",
+            "ATtiny85",
+            "ESP32",
+            "ESP8266",
+            "Raspberry Pi"
+        ],
+        "Tools & Databases": [
+            "SQL",
+            "Git",
+            "GitHub",
+            "GitLab"
+        ],
+        "Others": [
+            "PiHole",
+            "HomeAssistant",
+            "Twilio",
+            "Linux System Administration",
+            "Linux Server Administration",
+            "Cyber Security"
+        ],
+        "UI/UX": [
+            "HTML",
+            "CSS",
+            "JavaScript",
+            "TypeScript",
+            "Next.js"
+        ]
+    },
+    "contact": {
+        "socials": {
+            "email": {
+                "url": "srijan.76448@gmail.com",
+                "icon": "data:image/svg+xml,%3Csvg%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20xmlns%3D%22http://www.w3.org/2000/svg%22%3E%0A%3Cpath%20d%3D%22M12%2012C6.48%2012%204%209.52%208%2012c3.04%200%206.47%201.01%209%2012%2012zm0-10zm2-5H7.5V6.5h2.5v2.5zm3-4V4h2v2h-2zm4-9V1h2v2h-2zm-3-4V7h2v-2h-2zm4-3a1.5%201.5%200%300%201.5%201.5%200%300%201.5%201.5%200%300%20.5%20.5-6.5zM5%205.5%209.5%201%209.5%2026%209.5%2026%209.5z%22/%3E"
+            },
+            "linkedin": {
+                "url": "https://www.linkedin.com/in/srijan76448/",
+                "icon": "data:image/svg+xml,%3Csvg%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20xmlns%3D%22http://www.w3.org/2000/svg%22%3E%0A%3Cpath%20d%3D%22M21.99%2012C21.49%2012%2021%2011.49%2021%2012c-.49%200-.49%200-1.49%200-1.49%200H7.01c-.49%200-.49%200-1.49%200-1.49%200H3.01c-.49%200-.49%200-1.49%200-1.49%200V5.99c0-.55-.45-1-1-1v-4c0-.55-.45-1-1-1V3.01c0-.55-.45-1-1-1-.01-.01-.02-.03-.04-.05-.07-.11-.16-.23-.34-.43-.5-.76-.77-1.54-1.77-3.29-2.23-6.56-2.23-6.56%22/%3E"
+            },
+            "medium": {
+                "url": "https://medium.com/@srijan-76448",
+                "icon": "data:image/svg+xml,%3Csvg%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20xmlns%3D%22http://www.w3.org/2000/svg%22%3E%0A%3Cpath%20d%3D%22M12.03%2012.97L11.65%2013.29a.63.78.63%201.78%200%300%201.78%201.78%200%300%20.63%20.63-6.35zM3.97%205.03a.63.78.63%201.78%200%300%201.78%201.78%200%300%20.63%20.63-6.35zM16.04%2012.97a.63.78.63%201.78%200%300%201.78%201.78%200%300%20.63%20.63-6.35zM8.97%209.65a6.35%20.63%200%300%206.35%201.78%200%300%20.63%20.63z%22/%3E"
+            },
+            "github": {
+                "url": "https://github.com/srijan-76448",
+                "icon": "data:image/svg+xml,%3Csvg%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20xmlns%3D%22http://www.w3.org/2000/svg%22%3E%0A%3Cpath%20d%3D%22M12%2012C6.48%2012%204%209.52%208%2012c3.04%200%206.47%201.01%209%2012%2012zm0-10zm2-5H7.5V6.5h2.5v2.5zm3-4V4h2v2h-2zm4-9V1h2v2h-2zm-3-4V7h2v-2h-2zm4-3a1.5%201.5%200%300%201.5%201.5%200%300%201.5%201.5%200%300%20.5%20.5-6.5zM5%205.5%209.5%201%209.5%2026%209.5%2026%209.5z%22/%3E"
+            },
+            "instagram": {
+                "url": "https://www.instagram.com/srijan.76448",
+                "icon": "M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+            },
+            "facebook": {
+                "url": "https://www.facebook.com/srijan.76448",
+                "icon": "data:image/svg+xml,%3Csvg%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20xmlns%3D%22http://www.w3.org/2000/svg%22%3E%0A%3Cpath%20d%3D%22M16.5%2012.5a6.5%206.5%200%300%206.5%206.5%200%300%20.5%20.5-6.5zM5.5%2012.5a6.5%201.78%200%300%206.78%201.78%200%300%20.5%20.78-6.78zM5.5%209.5a6.5%201.22%200%300%206.22%201.22%200%300%20.5%20.22-6.22zM16.5%209.5a6.5%201.78%200%300%206.78%201.78%200%300%20.5%20.78-6.78zM16.5%202.5a6.5%201.22%200%300%206.22%201.22%200%300%20.5%20.22-6.22zM5.5%202.5a6.5%201.78%200%300%206.78%201.78%200%300%20.5%20.78-6.78zM5.5%2014.5a6.5%201.22%200%300%206.22%201.22%200%300%20.5%20.22-6.22zM16.5%2014.5a6.5%201.78%200%300%206.78%201.78%200%300%20.5%20.78-6.78zM16.5%2016.5a6.5%201.22%200%300%206.22%201.22%200%300%20.5%20.22-6.22zM5.5%2016.5a6.5%201.78%200%300%206.78%201.78%200%300%20.5%20.78-6.78zM16.5%2018.5a6.5%201.78%200%300%206.78%201.78%200%300%20.5%20.78-6.78zM5.5%2018.5a6.5%201.22%200%300%206.22%201.22%200%300%20.5%20.22-6.22zM16.5%2020.5a6.5%201.78%200%300%206.78%201.78%200%300%20.5%20.78-6.78zM5.5%2020.5a6.5%201.22%200%300%206.22%201.22%200%300%20.5%20.22-6.22zM16.5%2022.5a6.5%201.78%200%300%206.78%201.78%200%300%20.5%20.78-6.78zM5.5%2022.5a6.5%201.22%200%300%206.22%201.22%200%300%20.5%20.22-6.22zM16.5%2024.5a6.5%201.78%200%300%206.78%201.78%200%300%20.5%20.78-6.78zM5.5%2024.5a6.5%201.22%200%300%206.22%201.22%200%300%20.5%20.22-6.22zM16.5%2026.5a6.5%201.78%200%300%206.78%201.78%200%300%20.5%20.78-6.78zM5.5%2026.5a6.5%201.22%200%300%206.22%201.22%200%300%20.5%20.22-6.22zM16.5%2028.5a6.5%201.78%200%300%206.78%201.78%200%300%20.5%20.78-6.78zM5.5%2028.5a6.5%201.22%200%300%206.22%201.22%200%300%20.5%20.22-6.22zM16.5%2030.5a6.5%201.78%200%300%206.78%201.78%200%300%20.5%20.78-6.78zM5.5%2030.5a6.5%201.22%200%300%206.22%201.22%200%300%20.5%20.22-6.22zM16.5%2032.5a6.5%201.78%200%300%206.78%201.78%200%300%20.5%20.78-6.78zM5.5%2032.5a6.5%201.22%200%300%206.22%201.22%200%300%20.5%20.22-6.22zM16.5%2034.5a6.5%201.78%200%300%206.78%201.78%200%300%20.5%20.78-6.78zM5.5%2034.5a6.5%201.22%200%300%206.22%201.22%200%300%20.5%20.22-6.22zM16.5%2036.5a6.5%201.78%200%300%206.78%201.78%200%300%20.5%20.78-6.78zM5.5%2036.5a6.5%201.22%200%300%206.22%201.22%200%300%20.5%20.22-6.22zM16.5%2038.5a6.5%201.78%200%300%206.78%201.78%200%300%20.5%20.78-6.78zM5.5%2038.5a6.5%201.22%200%300%206.22%201.22%200%300%20.5%20.22-6.22zM16.5%2040.5a6.5%201.78%200%300%206.78%201.78%200%300%20.5%20.78-6.78zM5.5%2040.5a6.5%201.22%200%300%206.22%201.22%200%300%20.5%20.22-6.22zM16.5%2042.5a6.5%201.78%200%300%206.78%201.78%200%300%20.5%20.78-6.78zM5.5%2042.5a6.5%201.22%200%300%206.22%201.22%200%300%20.5%20.22-6.22zM16.5%2044.5a6.5%201.78%200%300%206.78%201.78%200%300%20.5%20.78-6.78zM5.5%2044.5a6.5%201.22%200%300%206.22%201.22%200%300%20.5%20.22-6.22zM16.5%2046.5a6.5%201.78%200%300%206.78%201.78%200%300%20.5%20.78-6.78zM5.5%2046.5a6.5%201.22%200%300%206.22%201.22%200%300%20.5%20.22-6.22zM16.5%2048.5a6.5%201.78%200%300%206.78%201.78%200%300%20.5%20.78-6.78zM5.5%2048.5a6.5%201.22%200%300%206.22%201.22%200%300%20.5%20.22-6.22zM16.5%2050.5a6.5%201.78%200%300%206.78%201.78%200%300%20.5%20.78-6.78zM5.5%2050.5a6.5%"
+            }
+        },
+        "contact-text": "Feel free to reach out to me via email or connect with me on social media!"
+    }
+}

@@ -1,0 +1,11 @@
+{
+    "pages": [
+        "Home",
+        "About",
+        "Projects",
+        "Resume",
+        "Contact"
+    ],
+    "loadingTime": 5000,
+    "Mode": "default"
+}

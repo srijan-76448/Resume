@@ -1,0 +1,419 @@
+:root {
+  --base-color: #000000;
+  --base-card-color: #14000014;
+  --base-border-color: #ff00ff;
+  --highlight-color: #0056b3;
+  --h1-color: #007bff;
+  --h2-color: #007bff;
+  --h3-color: #007bff;
+  --text-color: #ffffff;
+  --text-color-1: #e0e0e0;
+  --text-color-2: #f0f0f0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-x: hidden;
+  position: relative;
+  background-color: var(--base-color);
+  color: var(--text-color);
+  overflow-y: scroll;
+}
+
+::-webkit-scrollbar {
+  width: 0;
+}
+
+#particleAccelerator {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+/* Reusable Card Style */
+.card {
+  width: 70vw;
+  max-width: 900px;
+  padding: 2rem;
+  border-radius: 20px;
+  border: 2px solid var(--base-border-color);
+  background: var(--base-card-color);
+  box-shadow: 0 10px 20px #ff00ff19,
+              0 6px 6px #ff00ff19;
+  text-align: center;
+  animation: float 2s ease-in-out infinite alternate;
+}
+
+.card-title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--h2-color);
+  margin-bottom: 1rem;
+}
+
+/* Title Cards */
+.title-card {
+  margin-bottom: 2rem;
+  padding: 1rem 2rem;
+  border: 2px solid var(--base-border-color);
+  border-radius: 16px;
+  background: var(--base-card-color);
+  box-shadow: 0 6px 12px #ff00ff33;
+  text-align: center;
+  left: auto;
+}
+
+/* Give some spacing between sections */
+.section-space {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem 1rem;
+}
+
+@media only screen and (max-width: 600px) {
+  .card {
+    width: 90vw;
+    padding: 1.5rem;
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-5px);
+  }
+}
+
+/* Card Barrel Roll */
+@keyframes barrel-roll {
+  0% {
+    transform: rotate(0deg) scale(0.9);
+    opacity: 0;
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+    opacity: 1;
+  }
+}
+
+/* .card {
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 0.5s, transform 0.5s;
+} */
+
+.card.roll-in {
+  animation: barrel-roll 1s ease forwards;
+}
+
+/* Home Card */
+.home {
+  position: absolute;
+  top: auto;
+  left: auto;
+  width: 100%;
+  height: auto;
+  max-width: 1000px;
+}
+
+.profile-pic {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--h1-color);
+}
+
+.text-area {
+  text-align: left;
+  margin-left: 2rem;
+  vertical-align: middle;
+  max-width: calc(60vw - 400px);
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.user-name {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: var(--h1-color);
+  margin-top: 1rem;
+}
+
+.user-details {
+  font-size: 1.2rem;
+  color: var(--text-color-1);
+}
+
+.user-short-description {
+  margin-top: 1rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--text-color-2);
+}
+
+/* About Card */
+.about {
+  width: 100%;
+  max-width: 1000px;
+  height: auto;
+}
+
+.about-description {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  color: var(--text-color-2);
+  text-align: left;
+}
+
+/* Skills Cards */
+.skills-space {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+.skills-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  justify-content: center;
+  margin-top: 2rem;
+  max-width: 960px;
+}
+
+.skill-card {
+  background: var(--base-card-color);
+  border: 3px solid var(--base-border-color);
+  border-radius: 20px;
+  padding: 1.5rem;
+  width: 250px;
+  box-shadow: 0 6px 12px #4d00ffcc;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  justify-self: center;    /* center in grid cell */
+}
+
+.skill-type {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: var(--h3-color);
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.skill-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+.skill-list span {
+  background: #e9ecef;
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  color: #000;
+}
+
+/* Projects Cards */
+.projects-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  justify-content: center;
+  margin-top: 2rem;
+  max-width: 1000px;
+}
+
+/* Individual Project Card */
+.project-card {
+  background: var(--base-card-color);
+  border: 2px solid var(--base-border-color);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 6px 12px #ff00ff33;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-align: left;
+}
+
+.projects-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 300px);
+  gap: 20px;
+  justify-content: center;
+  margin-top: 2rem;
+  max-width: 1000px;
+}
+
+.project-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 24px rgba(255, 0, 255, 0.35);
+}
+
+.project-title {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: var(--h3-color);
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.project-description {
+  font-size: 1rem;
+  color: var(--text-color-2);
+  margin-bottom: 1rem;
+  line-height: 1.4;
+}
+
+.project-card a {
+  display: inline-block;
+  margin-top: 0.5rem;
+  color: var(--base-border-color);
+  font-weight: bold;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.project-image {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+}
+
+.project-card a:hover {
+  color: #007bff;
+}
+
+/* Contact Us Card */
+/* Title */
+.contact-form-title {
+  display: block;
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #ff00ff;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+/* Container for left/right split */
+.contact-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 2rem;
+  flex-wrap: wrap; /* stack on smaller screens */
+}
+
+.contact-info {
+  flex: 1;
+  text-align: left;
+}
+
+.contact-form {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.contact-form-entrys {
+  display: flex;
+  flex-direction: column;
+  border: #00ffff40;
+  border-radius: 10px;
+  font-size: 1rem;
+  transition: all 250ms ease;
+  min-height: 30px;
+  padding: 5px;
+}
+
+@media (max-width: 768px) {
+  .contact-container {
+    flex-direction: column;
+  }
+  .contact-info,
+  .contact-form {
+    width: 100%;
+  }
+}
+
+.message-box {
+  min-height: 100px;
+  resize: vertical;
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.contact-form button {
+  padding: 0.75rem 1.5rem;
+  border: 2px solid #0056b3;
+  border-radius: 10px;
+  background-color: #00000000;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.contact-form button:hover {
+  background-color: #0056b3;
+}
+
+.contact-description {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  color: #f0f0f0;
+  word-wrap: break-word;
+}
+
+.email-address{
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.mail-id {
+  text-decoration: underline;
+}
+
+.social-links {
+  margin-top: 1rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.social-icon {
+  margin-top: 1rem;
+  border-width: 2px;
+  border-style: solid;
+  border-radius: 5px;
+  border-color: #0056b3;
+  color: #0056b3;
+  width: 50px;
+  height: 50px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

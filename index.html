@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title id="web-title">My Portfolio</title>
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body>
+    <canvas id="particleAccelerator"></canvas>
+    <!-- Home Card -->
+    <div class="home-space section-space">
+      <div id="home" class="home card">
+        <img
+          id="profile-pic"
+          src=""
+          alt="Srijan Bhattacharyya"
+          align="right"
+          class="profile-pic"
+        />
+        <div class="text-area" align="left">
+          <span id="user-name" class="user-name">Srijan Bhattacharyya</span>
+          <br />
+          <span id="user-details" class="user-details"></span>
+          <br />
+          <p id="user-short-description" class="user-short-description"></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- About Card -->
+    <div class="about-space section-space">
+      <div id="about" class="about card">
+        <span id="about-title" class="about-title card-title">About Me</span>
+        <p id="about-description" class="about-description"></p>
+      </div>
+    </div>
+
+    <!-- Skills Card -->
+    <div class="skills-space section-space">
+      <div id="skills" class="skills">
+        <div class="card title-card">
+          <span id="skills-title" class="skills-title card-title">Skills</span>
+        </div>
+        <div id="skills-list" class="skills-list"></div>
+      </div>
+    </div>
+
+    <!-- Projects Card -->
+    <div class="projects-space section-space">
+      <div class="projects">
+        <div class="card title-card">
+          <span id="projects-title" class="projects-title card-title"
+            >Projects</span
+          >
+        </div>
+        <div id="projects-list" class="projects-list"></div>
+      </div>
+    </div>
+
+    <!-- Contact Us Card -->
+    <div class="contact-us-space section-space">
+      <div id="contact" class="contact card">
+        <span id="contact-form-title" class="contact-form-title card-title">
+          Join Us
+        </span>
+
+        <div class="contact-container">
+          <!-- LEFT: Info -->
+          <div class="contact-info">
+            <p id="contact-description" class="contact-description"></p>
+            <br>
+            <span id="email-address" class="email-address"></span>
+            <br>
+            <div id="social-links" class="social-links"></div>
+          </div>
+
+          <!-- RIGHT: Form -->
+          <div id="contact-form" class="contact-form">
+            <input
+              type="text"
+              id="name"
+              name="name"
+              required
+              placeholder="Your Name"
+              class="contact-form-entrys"
+            />
+            <input
+              type="email"
+              id="email"
+              name="email"
+              required
+              placeholder="Your Email"
+              class="contact-form-entrys"
+            />
+            <textarea
+              id="message"
+              name="message"
+              required
+              placeholder="Write your message here"
+              class="message-box contact-form-entrys"
+            ></textarea>
+            <button
+              type="submit"
+              id="submit"
+              class="contact-form-submit-button"
+            >
+              Send
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="index.js"></script>
+  </body>
+</html>
