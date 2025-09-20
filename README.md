@@ -34,10 +34,10 @@ A responsive and interactive personal portfolio website.
 │   ├── imgs/
 │   │   └── Face.jpg
 │   └── settings.json
+│   └── info.json
 ├── index.css
 ├── index.html
 ├── index.js
-└── info.json
 ```
 
 ## 👨‍💻 Author
