@@ -247,10 +247,10 @@ function renderContact(contact) {
   // Social links
   const socialLinksContainer = document.getElementById("social-links");
   if (socialLinksContainer && contact.socials) {
-    socialLinksContainer.innerHTML = ""; // clear old content
+    socialLinksContainer.innerHTML = "";
 
     Object.entries(contact.socials).forEach(([key, value]) => {
-      if (key === "email") return; // already handled separately
+      if (key === "email") return;
 
       const link = document.createElement("a");
       link.href = value.url;
