@@ -1,11 +1,13 @@
 {
-    "pages": [
+    "loading-time-limit": 5000,
+    "loading-screen-type": "plymouth-screen",
+    "animated-bg": true,
+    "cards": [
         "Home",
         "About",
+        "Skills",
         "Projects",
-        "Resume",
-        "Contact"
+        "Contact Me"
     ],
-    "loadingTime": 5000,
-    "Mode": "default"
+    "icon": "assets/imgs/logo.webp"
 }
