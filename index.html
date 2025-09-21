@@ -4,9 +4,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title id="web-title">My Portfolio</title>
+    <link
+      rel="icon"
+      type="image/webp"
+      href="assets/imgs/logo.webp"
+      id="web-icon"
+    />
     <link rel="stylesheet" href="index.css" />
   </head>
   <body>
+    <div id="loadingScreen" class="loading-screen"></div>
     <canvas id="particleAccelerator"></canvas>
     <!-- Home Card -->
     <div class="home-space section-space">
@@ -40,7 +47,9 @@
     <div class="skills-space section-space">
       <div id="skills" class="skills">
         <div class="card title-card">
-          <span id="skills-title" class="skills-title title-card-title">Skills</span>
+          <span id="skills-title" class="skills-title title-card-title"
+            >Skills</span
+          >
         </div>
         <div id="skills-list" class="skills-list"></div>
       </div>
@@ -69,9 +78,9 @@
           <!-- LEFT: Info -->
           <div class="contact-info">
             <p id="contact-description" class="contact-description"></p>
-            <br>
+            <br />
             <span id="email-address" class="email-address"></span>
-            <br>
+            <br />
             <div id="social-links" class="social-links"></div>
           </div>
 
@@ -83,7 +92,7 @@
               name="name"
               required
               placeholder="Your Name"
-              class="contact-form-entrys"
+              class="contact-form-entry"
             />
             <input
               type="email"
@@ -91,14 +100,14 @@
               name="email"
               required
               placeholder="Your Email"
-              class="contact-form-entrys"
+              class="contact-form-entry"
             />
             <textarea
               id="message"
               name="message"
               required
               placeholder="Write your message here"
-              class="message-box contact-form-entrys"
+              class="message-box contact-form-entry"
             ></textarea>
             <button
               type="submit"
@@ -110,6 +119,10 @@
           </div>
         </div>
       </div>
+    </div>
+
+    <div id="project-popup" class="project-popup">
+      <div id="project-popup-content" class="project-popup-content"></div>
     </div>
 
     <script src="index.js"></script>

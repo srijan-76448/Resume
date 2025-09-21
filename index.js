@@ -7,6 +7,61 @@ async function fetchJSON(path) {
   return response.json();
 }
 
+// --- Render Webpage Icon ---
+function renderWebpageIcon(iconPath) {
+  const webIcon = document.getElementById("web-icon");
+  webIcon.href = iconPath;
+}
+
+// --- Show Loading Screen ---
+async function loadingScreen() {
+  let cssLink = null;
+  let jsScript = null;
+  try {
+    const settings = await fetch("assets/settings.json").then((response) =>
+      response.json()
+    );
+    const loadingScreenType = settings["loading-screen-type"];
+    const loadingTimeLimit = settings["loadingTime"];
+    const loadingScreenDir = `./loading-screens/${loadingScreenType}/`;
+    const cssPath = `${loadingScreenDir}ls.css`;
+    const jsPath = `${loadingScreenDir}ls.js`;
+
+    const loadingScreenElement = document.getElementById("loadingScreen");
+    loadingScreenElement.classList.remove("hidden");
+
+    cssLink = document.createElement("link");
+    cssLink.rel = "stylesheet";
+    cssLink.href = cssPath;
+    document.head.appendChild(cssLink);
+
+    jsScript = document.createElement("script");
+    jsScript.src = jsPath;
+    document.body.appendChild(jsScript);
+
+    await new Promise((resolve, reject) => {
+      jsScript.onload = resolve;
+      jsScript.onerror = reject;
+    });
+
+    setTimeout(() => {
+      loadingScreenElement.classList.add("hidden");
+      loadingScreenElement.innerHTML = "";
+      if (cssLink) cssLink.remove();
+      if (jsScript) jsScript.remove();
+    }, loadingTimeLimit);
+  } catch (error) {
+    console.error("Failed to handle loading screen:", error);
+    const loadingScreenElement = document.getElementById("loadingScreen");
+    if (loadingScreenElement) {
+      loadingScreenElement.classList.add("hidden");
+    }
+    if (cssLink) cssLink.remove();
+    if (jsScript) jsScript.remove();
+  }
+}
+
+// --- Particle Accelerator Effect ---
 class ParticleAccelerator {
   constructor(canvas) {
     this.canvas = canvas;
@@ -191,7 +246,6 @@ function renderSkills(skills) {
     });
   }
 }
-
 // --- Render Projects Section ---
 function renderProjects(projects) {
   const projectsContainer = document.getElementById("projects-list");
@@ -199,28 +253,73 @@ function renderProjects(projects) {
     projectsContainer.innerHTML = "";
 
     projects.forEach((project) => {
-      const projectDiv = document.createElement("div");
-      projectDiv.className = "project-card";
+      const projectButton = document.createElement("button");
+      projectButton.className = "project-card";
 
-      projectDiv.innerHTML = `
-        ${
-          project.link
-            ? ` <img src="${project.image}" alt="${project.name}" class="project-image" align="center"/>`
-            : ""
-        }
-        <span class="project-title">${project.name}</span>
-        <p class="project-description">${
-          project.description || project.descripton || ""
-        }</p>
-        ${
-          project.link
-            ? `<a href="${project.link}" target="_blank">View Project</a>`
-            : ""
-        }
-      `;
+      // Open the popup when the button is clicked, passing the project object
+      projectButton.onclick = () => {
+        projectPopup(project);
+      };
 
-      projectsContainer.appendChild(projectDiv);
+      projectButton.innerHTML = `
+                ${
+                  project.image
+                    ? `<img src="${project.image}" alt="${project.name}" class="project-image" align="center"/>`
+                    : ""
+                }
+                <span class="project-title">${project.name}</span>
+                <div class="project-description">${
+                  project.description || project.descripton || ""
+                }</div>
+            `;
+
+      projectsContainer.appendChild(projectButton);
     });
+  }
+}
+
+// --- Project Popup Functionality ---
+function projectPopup(project) {
+  const popup = document.getElementById("project-popup");
+  const popupContent = document.getElementById("project-popup-content");
+
+  if (project) {
+    // Open the popup and populate with project data
+    if (popup && popupContent) {
+      popupContent.innerHTML = `
+                <div class="popup-project-image-container">
+                    <img src="${project.image}" alt="${
+        project.name
+      }" class="popup-project-image">
+                </div>
+                <h2 class="popup-project-title">${project.name}</h2>
+                <p class="popup-project-long-description">${
+                  project["long-description"] || project.description
+                }</p>
+                ${
+                  project.link
+                    ? `<a href="${project.link}" target="_blank" class="popup-project-link-btn">Visit Project</a>`
+                    : ""
+                }
+            `;
+      popup.classList.add("visible");
+      document.body.classList.add("no-scroll");
+
+      // Add event listener to close the popup when clicking the background
+      popup.onclick = (event) => {
+        if (event.target === popup) {
+          projectPopup(); // Close the popup
+        }
+      };
+    }
+  } else {
+    // Close the popup
+    if (popup) {
+      popup.classList.remove("visible");
+      document.body.classList.remove("no-scroll");
+      // Remove the event listener to avoid memory leaks
+      popup.onclick = null;
+    }
   }
 }
 
@@ -252,21 +351,25 @@ function renderContact(contact) {
     Object.entries(contact.socials).forEach(([key, value]) => {
       if (key === "email") return;
 
-      const link = document.createElement("a");
-      link.href = value.url;
-      link.target = "_blank";
-      link.rel = "noopener noreferrer";
-      link.className = "social-link";
-      link.title = key;
+      const socialButton = document.createElement("button");
+      socialButton.className = "social-link";
+      socialButton.title = key;
+
+      // Set the button's action to redirect to the URL
+      socialButton.onclick = () => {
+        window.open(value.url, "_blank", "noopener,noreferrer");
+      };
 
       // Icon (SVG data URI from JSON)
       const iconImg = document.createElement("svg");
       iconImg.className = "social-icon";
-      iconImg.setAttribute("viewBox", "0 0 24 24");
+      iconImg.setAttribute("width", "24");
+      iconImg.setAttribute("height", "24");
+      iconImg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
       iconImg.innerHTML = `<path d="${value.icon}"/>`;
 
-      link.appendChild(iconImg);
-      socialLinksContainer.appendChild(link);
+      socialButton.appendChild(iconImg);
+      socialLinksContainer.appendChild(socialButton);
     });
   }
 }
@@ -283,7 +386,7 @@ function enableCardAnimations() {
         }
       });
     },
-    { threshold: 0.3 } // trigger when 30% of card is visible
+    { threshold: 0.3 }
   );
 
   cards.forEach((card) => observer.observe(card));
@@ -292,14 +395,24 @@ function enableCardAnimations() {
 // --- Main App Function ---
 async function main() {
   try {
+    // Show loading screen
+    await loadingScreen();
+
+    // Fetch settings and info data
+    const settingsData = await fetchJSON("assets/settings.json");
+    const infoData = await fetchJSON("assets/info.json");
+
+    // Render webpage icon
+    renderWebpageIcon(settingsData["icon"]);
+
+    // Initialize particle accelerator effect
     const canvas = document.getElementById("particleAccelerator");
     if (canvas) {
       new ParticleAccelerator(canvas);
     }
 
-    const settingsData = await fetchJSON("assets/settings.json");
-    const infoData = await fetchJSON("assets/info.json");
-
+    // Render all sections
+    window.scrollTo(0, 0);
     renderUserInfo(infoData["user-info"]);
     renderAbout(infoData["user-info"]["about-me"]);
     renderSkills(infoData.skills);
@@ -310,6 +423,8 @@ async function main() {
     // enableCardAnimations();
   } catch (error) {
     console.error("Error loading data:", error);
+    // Ensure loading screen is hidden in case of error
+    hideLoadingScreen(0);
   }
 }
 
