@@ -32,12 +32,13 @@ A responsive and interactive personal portfolio website.
 ```
 ├── assets/
 │   ├── imgs/
-│   │   └── Face.jpg
-│   └── settings.json
+│   │   ├── pfp.jpg
+│   │   └── logo.webp
+│   ├── settings.json
 │   └── info.json
-├── index.css
 ├── index.html
-├── index.js
+├── index.css
+└── index.js
 ```
 
 ## 👨‍💻 Author
