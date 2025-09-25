@@ -46,9 +46,9 @@
 
   --card-list-gap: 25px;
   --max-small-card-width: 300px;
+  --small-card-space-width: 960px;
 
   --social-button-size: 50px;
-  --social-button-icon-size: 24px;
   --social-button-icon-color: #0056b3;
 }
 
@@ -250,7 +250,7 @@ body {
   gap: var(--card-list-gap);
   justify-content: center;
   margin-top: 2rem;
-  max-width: 960px;
+  max-width: var(--small-card-space-width);
 }
 
 .skill-card {
@@ -291,19 +291,28 @@ body {
 }
 
 /* Projects Cards */
+.project-space {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+/* Individual Project Card */
 .projects-list {
   display: grid;
   grid-template-columns: repeat(
-    auto-fill,
-    minmax(var(--max-small-card-width), 1fr)
+    auto-fit, 
+    var(--max-small-card-width)
   );
   gap: var(--card-list-gap);
   justify-content: center;
   margin-top: 2rem;
-  max-width: var(--max-card-width);
+  max-width: var(--small-card-space-width);
 }
 
-/* Individual Project Card */
 .project-card {
   background: var(--base-card-color);
   border: var(--card-border-width) solid var(--base-border-color);
@@ -311,15 +320,6 @@ body {
   padding: 1.5rem;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   text-align: left;
-}
-
-.projects-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, var(--max-small-card-width));
-  gap: var(--card-list-gap);
-  justify-content: center;
-  margin-top: 2rem;
-  max-width: var(--max-card-width);
 }
 
 .project-card:hover {
@@ -568,14 +568,11 @@ body {
   transform: scale(1.1);
 }
 
-.social-icon {
-  color: var(--social-button-icon-color);
-  width: var(--social-button-icon-size);
-  height: var(--social-button-icon-size);
-  top: auto;
-  left: auto;
-  position: relative;
-  overflow: hidden;
-  align-items: center;
+.btn-content {
+  display: flex;
   justify-content: center;
+  align-items: center;
+  width: calc(var(--social-button-size)/2);
+  height: calc(var(--social-button-size)/2);
+  color: var(--social-button-icon-color);
 }

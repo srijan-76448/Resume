@@ -323,17 +323,28 @@ function projectPopup(project) {
   }
 }
 
-// --- Render Contact Section ---
+// --- Render Contact Section (FIXED) ---
 function renderContact(contact) {
   if (!contact) return;
 
-  // Contact description text
+  // Helper function to format array data into valid SVG transform strings
+  const formatTransform = (key, value) => {
+    if (!Array.isArray(value)) return value || '';
+    if (key === 'matrix') {
+      return `matrix(${value.join(',')})`;
+    }
+    // Assume other array transforms are simple translations (like the 'transform' key)
+    if (key === 'transform') {
+      return `translate(${value.join(',')})`;
+    }
+    return '';
+  };
+
   const contactDescription = document.getElementById("contact-description");
   if (contactDescription) {
     contactDescription.textContent = contact["contact-text"] || "";
   }
 
-  // Email address
   const contactEmail = document.getElementById("email-address");
   if (contactEmail && contact.socials && contact.socials.email) {
     const mail = document.createElement("span");
@@ -343,7 +354,6 @@ function renderContact(contact) {
     contactEmail.appendChild(mail);
   }
 
-  // Social links
   const socialLinksContainer = document.getElementById("social-links");
   if (socialLinksContainer && contact.socials) {
     socialLinksContainer.innerHTML = "";
@@ -355,21 +365,62 @@ function renderContact(contact) {
       socialButton.className = "social-link";
       socialButton.title = key;
 
-      // Set the button's action to redirect to the URL
       socialButton.onclick = () => {
         window.open(value.url, "_blank", "noopener,noreferrer");
       };
 
-      // Icon (SVG data URI from JSON)
-      const iconImg = document.createElement("svg");
-      iconImg.className = "social-icon";
-      iconImg.setAttribute("width", "24");
-      iconImg.setAttribute("height", "24");
-      iconImg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-      iconImg.innerHTML = `<path d="${value.icon}"/>`;
+      // 1. Create the new wrapper div
+      const btnContentDiv = document.createElement("div");
+      btnContentDiv.className = "btn-content";
 
-      socialButton.appendChild(iconImg);
+      // 2. Create the SVG element
+      const iconSVG = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      iconSVG.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+      iconSVG.setAttribute('class', 'social-icon');
+      iconSVG.setAttribute('viewBox', value.icon.viewBox || '0 0 24 24');
+
+      // 3. Create the Outer G element (Mapped to 'matrix' data, now correctly formatted)
+      const outerG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      if (value.icon.matrix) {
+        outerG.setAttribute('transform', formatTransform('matrix', value.icon.matrix));
+      }
+
+      // 4. Create the Inner G element (Mapped to 'transform' data, now correctly formatted)
+      const innerG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      if (value.icon.transform) {
+        innerG.setAttribute('transform', formatTransform('transform', value.icon.transform));
+      }
+
+      // 5. Create the Path element
+      const pathElement = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      pathElement.setAttribute('d', value.icon.path || '');
+      pathElement.setAttribute('fill', 'currentColor'); 
+      
+      // 6. Assemble the elements
+      innerG.appendChild(pathElement);
+      outerG.appendChild(innerG);
+      iconSVG.appendChild(outerG);
+      btnContentDiv.appendChild(iconSVG);
+      socialButton.appendChild(btnContentDiv);
       socialLinksContainer.appendChild(socialButton);
+    });
+  }
+}
+
+function bindEnterKeyToSubmit() {
+  const form = document.getElementById('contact-form');
+  const submitButton = document.getElementById('submit');
+
+  if (form && submitButton) {
+    form.addEventListener('keydown', (event) => {
+      // Check if the pressed key is the Enter key
+      if (event.key === 'Enter') {
+        // IMPORTANT: Prevent submission if the user is typing in the multiline message box (<textarea>)
+        if (event.target.tagName !== 'TEXTAREA') {
+          event.preventDefault(); // Stop default form submission/page refresh
+          submitButton.click();   // Programmatically click the submit button
+        }
+      }
     });
   }
 }
@@ -418,6 +469,7 @@ async function main() {
     renderSkills(infoData.skills);
     renderProjects(infoData.projects);
     renderContact(infoData.contact);
+    bindEnterKeyToSubmit();
 
     // Enable barrel roll animations
     // enableCardAnimations();
