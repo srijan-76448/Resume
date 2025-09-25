@@ -1,6 +1,4 @@
 {
-    "loading-time-limit": 5000,
-    "loading-screen-type": "plymouth-screen",
     "animated-bg": true,
     "cards": [
         "Home",
@@ -9,5 +7,18 @@
         "Projects",
         "Contact Me"
     ],
-    "icon": "assets/imgs/logo.webp"
+    "icon": "assets/imgs/logo.webp",
+    "loading-screen-settings": {
+        "time-limit": 5000,
+        "messageList": [
+            "Finding the website's IP address.",
+            "Establishing a secure connection.",
+            "Sending the request for the webpage.",
+            "Receiving the rendering data.",
+            "Processing rendering data.",
+            "Building page layout with graphics.",
+            "Welcome to my portfolio..."
+        ],
+        "cursor": "█"
+    }
 }
