@@ -14,51 +14,69 @@ function renderWebpageIcon(iconPath) {
 }
 
 // --- Show Loading Screen ---
-async function loadingScreen() {
-  let cssLink = null;
-  let jsScript = null;
-  try {
-    const settings = await fetch("assets/settings.json").then((response) =>
-      response.json()
-    );
-    const loadingScreenType = settings["loading-screen-type"];
-    const loadingTimeLimit = settings["loadingTime"];
-    const loadingScreenDir = `./loading-screens/${loadingScreenType}/`;
-    const cssPath = `${loadingScreenDir}ls.css`;
-    const jsPath = `${loadingScreenDir}ls.js`;
+function showLoadingScreen(loadingScreenSettings) {
+  // NOTE: cursor and prefix are hardcoded based on the provided script-1 logic.
+  const cursor = loadingScreenSettings.cursor;
+  const prefix = '<span class="ps-prefix">[  YES  ]</span> ';
 
-    const loadingScreenElement = document.getElementById("loadingScreen");
-    loadingScreenElement.classList.remove("hidden");
+  const messages = loadingScreenSettings.messageList;
+  const loadingScreen = document.getElementById("loadingScreen");
 
-    cssLink = document.createElement("link");
-    cssLink.rel = "stylesheet";
-    cssLink.href = cssPath;
-    document.head.appendChild(cssLink);
-
-    jsScript = document.createElement("script");
-    jsScript.src = jsPath;
-    document.body.appendChild(jsScript);
-
-    await new Promise((resolve, reject) => {
-      jsScript.onload = resolve;
-      jsScript.onerror = reject;
-    });
-
-    setTimeout(() => {
-      loadingScreenElement.classList.add("hidden");
-      loadingScreenElement.innerHTML = "";
-      if (cssLink) cssLink.remove();
-      if (jsScript) jsScript.remove();
-    }, loadingTimeLimit);
-  } catch (error) {
-    console.error("Failed to handle loading screen:", error);
-    const loadingScreenElement = document.getElementById("loadingScreen");
-    if (loadingScreenElement) {
-      loadingScreenElement.classList.add("hidden");
-    }
-    if (cssLink) cssLink.remove();
-    if (jsScript) jsScript.remove();
+  if (!messages || messages.length === 0 || !loadingScreen) {
+    if (loadingScreen) loadingScreen.classList.add("hidden");
+    return;
   }
+
+  loadingScreen.classList.remove("hidden");
+  loadingScreen.innerHTML = ""; // Clear previous content
+
+  const loadingTerminal = document.createElement("div");
+  loadingTerminal.className = "loading-terminal";
+  loadingScreen.appendChild(loadingTerminal);
+
+  // The last message in the array is treated as the final welcome/ready text
+  const welcomeText = messages[messages.length - 1];
+  const loadingMessages = messages.slice(0, -1);
+
+  let i = 0;
+  const messageDuration = 800; // Time between messages
+
+  const typeMessage = () => {
+    // Stop if the screen is hidden by the hideLoadingScreen() timer
+    if (loadingScreen.classList.contains("hidden")) return;
+
+    if (i < loadingMessages.length) {
+      // Display loading message
+      loadingTerminal.innerHTML += `<p>${prefix}${loadingMessages[i]}<span class="cursor">${cursor}</span></p>`;
+      loadingTerminal.scrollTop = loadingTerminal.scrollHeight;
+      i++;
+      setTimeout(typeMessage, messageDuration);
+    } else {
+      // Display final welcome message after a short delay
+      setTimeout(() => {
+        if (loadingScreen.classList.contains("hidden")) return;
+        loadingTerminal.innerHTML += `<p>${prefix}${welcomeText}<span class="cursor">${cursor}</span></p>`;
+        loadingTerminal.scrollTop = loadingTerminal.scrollHeight;
+      }, messageDuration);
+    }
+  };
+
+  typeMessage();
+}
+
+// --- Hide Loading Screen ---
+function hideLoadingScreen(loadingTimeLimit) {
+  const loadingScreenElement = document.getElementById("loadingScreen");
+  if (!loadingScreenElement) return;
+
+  // Wait for the specified time limit, then hide and cleanup
+  setTimeout(() => {
+    loadingScreenElement.classList.add("hidden");
+    loadingScreenElement.innerHTML = ""; // Cleanup content
+
+    // Force the page to scroll to the top
+    window.scrollTo(0, 0);
+  }, loadingTimeLimit);
 }
 
 // --- Particle Accelerator Effect ---
@@ -329,15 +347,15 @@ function renderContact(contact) {
 
   // Helper function to format array data into valid SVG transform strings
   const formatTransform = (key, value) => {
-    if (!Array.isArray(value)) return value || '';
-    if (key === 'matrix') {
-      return `matrix(${value.join(',')})`;
+    if (!Array.isArray(value)) return value || "";
+    if (key === "matrix") {
+      return `matrix(${value.join(",")})`;
     }
     // Assume other array transforms are simple translations (like the 'transform' key)
-    if (key === 'transform') {
-      return `translate(${value.join(',')})`;
+    if (key === "transform") {
+      return `translate(${value.join(",")})`;
     }
-    return '';
+    return "";
   };
 
   const contactDescription = document.getElementById("contact-description");
@@ -374,28 +392,46 @@ function renderContact(contact) {
       btnContentDiv.className = "btn-content";
 
       // 2. Create the SVG element
-      const iconSVG = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-      iconSVG.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-      iconSVG.setAttribute('class', 'social-icon');
-      iconSVG.setAttribute('viewBox', value.icon.viewBox || '0 0 24 24');
+      const iconSVG = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "svg"
+      );
+      iconSVG.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+      iconSVG.setAttribute("class", "social-icon");
+      iconSVG.setAttribute("viewBox", value.icon.viewBox || "0 0 24 24");
 
       // 3. Create the Outer G element (Mapped to 'matrix' data, now correctly formatted)
-      const outerG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      const outerG = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "g"
+      );
       if (value.icon.matrix) {
-        outerG.setAttribute('transform', formatTransform('matrix', value.icon.matrix));
+        outerG.setAttribute(
+          "transform",
+          formatTransform("matrix", value.icon.matrix)
+        );
       }
 
       // 4. Create the Inner G element (Mapped to 'transform' data, now correctly formatted)
-      const innerG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      const innerG = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "g"
+      );
       if (value.icon.transform) {
-        innerG.setAttribute('transform', formatTransform('transform', value.icon.transform));
+        innerG.setAttribute(
+          "transform",
+          formatTransform("transform", value.icon.transform)
+        );
       }
 
       // 5. Create the Path element
-      const pathElement = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-      pathElement.setAttribute('d', value.icon.path || '');
-      pathElement.setAttribute('fill', 'currentColor'); 
-      
+      const pathElement = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "path"
+      );
+      pathElement.setAttribute("d", value.icon.path || "");
+      pathElement.setAttribute("fill", "currentColor");
+
       // 6. Assemble the elements
       innerG.appendChild(pathElement);
       outerG.appendChild(innerG);
@@ -407,18 +443,19 @@ function renderContact(contact) {
   }
 }
 
+// --- Binding Enter Key to Submit Button ---
 function bindEnterKeyToSubmit() {
-  const form = document.getElementById('contact-form');
-  const submitButton = document.getElementById('submit');
+  const form = document.getElementById("contact-form");
+  const submitButton = document.getElementById("submit");
 
   if (form && submitButton) {
-    form.addEventListener('keydown', (event) => {
+    form.addEventListener("keydown", (event) => {
       // Check if the pressed key is the Enter key
-      if (event.key === 'Enter') {
+      if (event.key === "Enter") {
         // IMPORTANT: Prevent submission if the user is typing in the multiline message box (<textarea>)
-        if (event.target.tagName !== 'TEXTAREA') {
+        if (event.target.tagName !== "TEXTAREA") {
           event.preventDefault(); // Stop default form submission/page refresh
-          submitButton.click();   // Programmatically click the submit button
+          submitButton.click(); // Programmatically click the submit button
         }
       }
     });
@@ -446,12 +483,15 @@ function enableCardAnimations() {
 // --- Main App Function ---
 async function main() {
   try {
-    // Show loading screen
-    await loadingScreen();
-
     // Fetch settings and info data
     const settingsData = await fetchJSON("assets/settings.json");
     const infoData = await fetchJSON("assets/info.json");
+
+    // Show loading screen
+    await showLoadingScreen(settingsData["loading-screen-settings"]);
+    hideLoadingScreen(
+      settingsData["loading-screen-settings"]["time-limit"]
+    );
 
     // Render webpage icon
     renderWebpageIcon(settingsData["icon"]);
@@ -475,8 +515,6 @@ async function main() {
     // enableCardAnimations();
   } catch (error) {
     console.error("Error loading data:", error);
-    // Ensure loading screen is hidden in case of error
-    hideLoadingScreen(0);
   }
 }
 

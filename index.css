@@ -80,6 +80,47 @@ body {
   z-index: -1;
 }
 
+/* Loading Screen */
+.loading-screen {
+  position: fixed;
+  inset: 0;
+  background: #000000;
+  color: #00ffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Fira Code", monospace;
+  font-size: 1rem;
+  z-index: 9999;
+}
+
+.ps-prefix {
+  color: #00ff00;
+  margin-right: 10px;
+}
+
+.loading-terminal {
+  text-align: left;
+  max-width: 600px;
+  white-space: pre-wrap;
+}
+
+.cursor {
+  display: inline-block;
+  margin-left: 5px;
+  animation: blink 1s infinite step-end;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.hidden {
+  display: none !important;
+}
+
 /* Reusable Card Style */
 .card {
   width: 70vw;
@@ -543,6 +584,7 @@ body {
 .mail-id {
   text-decoration: underline;
 }
+
 .social-links {
   margin-top: 1rem;
   display: flex;
