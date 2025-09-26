@@ -2,11 +2,11 @@
 
 A personal resume website built with `HTML`, `CSS` & `JavaScript`. All content is managed via a `JSON` file for easy updates. This repository hosts the source code for the site deployed via GitHub Pages at [**srijan.76448.org**](https://srijan.76448.org/).
 
-<!-- ![version](https://img.shields.io/github/v/release/srijan-76448/Resume?style=plastic&color=brightgreen&label=Version) -->
-![Visitors](https://visitor-badge.laobi.icu/badge?page_id=srijan-76448/Resume?label=Visitors&style=plastic)
+![version](https://img.shields.io/badge/Version-V--1.0.1-brightgreen?style=plastic)
 [![Last Updated](https://img.shields.io/github/last-commit/srijan-76448/Resume/main?label=Last%20Updated&style=plastic&display_timestamp=committer)](https://github.com/srijan-76448/Resume/pulse/monthly)
 [![Commits](https://img.shields.io/github/commit-activity/m/srijan-76448/Resume?label=Commits&style=plastic)](https://github.com/srijan-76448/Resume/commits)
 [![License](https://img.shields.io/badge/-License-blue.svg?style=plastic)](LICENSE)
+![Visitors](https://visitor-badge.laobi.icu/badge?page_id=srijan-76448/Resume&label=Visitors&style=plastic)
 
 ## ✨ Project Highlights
 
