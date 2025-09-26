@@ -79,20 +79,28 @@ function hideLoadingScreen(loadingTimeLimit) {
   }, loadingTimeLimit);
 }
 
-// --- Particle Accelerator Effect ---
+// --- Particle Accelerator Effect (Updated) ---
 class ParticleAccelerator {
-  constructor(canvas) {
+  constructor(canvas, settings) {
+    // <-- Now accepts settings
     this.canvas = canvas;
     this.ctx = canvas.getContext("2d");
     this.particles = [];
     this.mouse = { x: 0, y: 0 };
-    this.particleCount = 100;
+
+    // --- Configurable properties loaded from settings ---
+    this.particleCount = settings["no-of-particles"];
+    this.minSize = settings["min-particle-size"];
+    this.maxSize = settings["max-particle-size"];
+    this.maxOpacity = (settings["particle-opacity"]/100);
+    this.speed = settings.speed;
+    this.colors = settings.colors;
 
     this.resize();
     this.init();
     this.animate();
 
-    // Event listeners
+    // --- Event listeners ---
     window.addEventListener("resize", () => this.resize());
     canvas.addEventListener("mousemove", (e) => this.handleMouseMove(e));
   }
@@ -104,22 +112,26 @@ class ParticleAccelerator {
 
   init() {
     this.particles = [];
+
     for (let i = 0; i < this.particleCount; i++) {
+      const size = Math.random() * (this.maxSize - this.minSize) + this.minSize;
+      const initialVelocity = (Math.random() - 0.5) * this.speed;
+      const opacity = this.maxOpacity;
+
       this.particles.push({
         x: Math.random() * this.canvas.width,
         y: Math.random() * this.canvas.height,
-        vx: (Math.random() - 0.5) * 0.5,
-        vy: (Math.random() - 0.5) * 0.5,
-        size: Math.random() * 3 + 1,
-        opacity: Math.random() * 0.5 + 0.3,
+        vx: initialVelocity,
+        vy: initialVelocity,
+        size: size,
+        opacity: opacity,
         color: this.getRandomColor(),
       });
     }
   }
 
   getRandomColor() {
-    const colors = ["#00ffff", "#8a2be2", "#39ff14", "#0099ff"];
-    return colors[Math.floor(Math.random() * colors.length)];
+    return this.colors[Math.floor(Math.random() * this.colors.length)];
   }
 
   handleMouseMove(e) {
@@ -132,30 +144,25 @@ class ParticleAccelerator {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
     this.particles.forEach((particle, index) => {
-      // Update position
       particle.x += particle.vx;
       particle.y += particle.vy;
 
-      // Mouse interaction
       const dx = this.mouse.x - particle.x;
       const dy = this.mouse.y - particle.y;
       const distance = Math.sqrt(dx * dx + dy * dy);
 
       if (distance < 100) {
         const force = (100 - distance) / 100;
-        particle.vx += (dx / distance) * force * 0.01;
-        particle.vy += (dy / distance) * force * 0.01;
+        particle.vx += (dx / distance) * force * 0.01 * this.speed;
+        particle.vy += (dy / distance) * force * 0.01 * this.speed;
       }
 
-      // Boundary check
       if (particle.x < 0 || particle.x > this.canvas.width) particle.vx *= -1;
       if (particle.y < 0 || particle.y > this.canvas.height) particle.vy *= -1;
 
-      // Keep particles in bounds
       particle.x = Math.max(0, Math.min(this.canvas.width, particle.x));
       particle.y = Math.max(0, Math.min(this.canvas.height, particle.y));
 
-      // Draw particle
       this.ctx.beginPath();
       this.ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
       this.ctx.fillStyle =
@@ -165,7 +172,6 @@ class ParticleAccelerator {
           .padStart(2, "0");
       this.ctx.fill();
 
-      // Draw connections
       this.particles.forEach((otherParticle, otherIndex) => {
         if (index !== otherIndex) {
           const dx = particle.x - otherParticle.x;
@@ -464,20 +470,15 @@ function bindEnterKeyToSubmit() {
 
 // --- Enable Card Animations on Scroll ---
 function enableCardAnimations() {
-  const cards = document.querySelectorAll(".card");
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("roll-in");
-          observer.unobserve(entry.target); // only animate once
-        }
-      });
-    },
-    { threshold: 0.3 }
-  );
-
-  cards.forEach((card) => observer.observe(card));
+  const canvas = document.getElementById("particleAccelerator");
+  if (canvas) {
+    // Ensure the background canvas doesn't block scrolling or clicks
+    canvas.style.pointerEvents = "none";
+    canvas.style.position = "fixed";
+    canvas.style.top = "0";
+    canvas.style.left = "0";
+    canvas.style.zIndex = "-1";
+  }
 }
 
 // --- Main App Function ---
@@ -489,17 +490,18 @@ async function main() {
 
     // Show loading screen
     await showLoadingScreen(settingsData["loading-screen-settings"]);
-    hideLoadingScreen(
-      settingsData["loading-screen-settings"]["time-limit"]
-    );
+    hideLoadingScreen(settingsData["loading-screen-settings"]["time-limit"]);
 
     // Render webpage icon
     renderWebpageIcon(settingsData["icon"]);
 
     // Initialize particle accelerator effect
     const canvas = document.getElementById("particleAccelerator");
-    if (canvas) {
-      new ParticleAccelerator(canvas);
+    const particleSettings = settingsData["particle-acceletor"];
+    const animatedBg = settingsData["animated-bg"];
+
+    if (canvas && particleSettings && animatedBg === true) {
+      new ParticleAccelerator(canvas, particleSettings);
     }
 
     // Render all sections
@@ -512,7 +514,7 @@ async function main() {
     bindEnterKeyToSubmit();
 
     // Enable barrel roll animations
-    // enableCardAnimations();
+    enableCardAnimations();
   } catch (error) {
     console.error("Error loading data:", error);
   }

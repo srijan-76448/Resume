@@ -17,7 +17,7 @@
   --button-border-hover-color: #000000;
   --button-text-hover-color: #000000;
 
-  --chip-bg-color: #00000000;
+  --chip-bg-color: rgba(0,0,0,0.75);
   --chip-text-color: #ffffffff;
   --chip-border-color: #19b8d8;
   --chip-border-width: 3px;
@@ -28,7 +28,7 @@
   --card-shadow-color: #ff00ff33;
   --card-border-width: 2px;
   --base-card-color: #000000cc;
-  --max-card-width: 900px;
+  --max-card-width: 720px;
   --max-card-height: 500px;
   --small-card-shadow-color: #4d00ffcc;
 
@@ -49,9 +49,20 @@
   --small-card-space-width: 960px;
 
   --social-button-size: 50px;
-  --social-button-icon-color: #0056b3;
+  --social-button-icon-color: #19b8d8;
+
+  --section-space-width: 100%;
+  --section-space-height: 100vh;
 }
 
+/* Global Styles */
+html {
+  scroll-behavior: smooth;
+  height: 100%;
+  scroll-snap-type: y mandatory;
+}
+
+/* Styles for the body */
 body {
   font-family: Arial, sans-serif;
   transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;
@@ -65,19 +76,14 @@ body {
   background-color: var(--base-color);
   color: var(--text-color);
   overflow-y: scroll;
+  height: 100%;
+  position: relative;
+  overflow-y: scroll;
 }
 
+/* Hide scrollbar */
 ::-webkit-scrollbar {
   width: 0;
-}
-
-#particleAccelerator {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
 }
 
 /* Loading Screen */
@@ -121,63 +127,27 @@ body {
   display: none !important;
 }
 
-/* Reusable Card Style */
-.card {
-  width: 70vw;
-  max-width: var(--max-card-width);
-  padding: 2rem;
-  border-radius: var(--base-border-radius);
-  border: 2px solid var(--base-border-color);
-  background: var(--base-card-color);
-  box-shadow: var(--floating-card-shadow-offset)
-      var(--floating-card-shadow-Xw-offset)
-      var(--floating-card-shadow-Xh-offset) var(--card-shadow-color),
-    var(--floating-card-shadow-offset) var(--floating-card-shadow-Yw-offset)
-      var(--floating-card-shadow-Yh-offset) var(--card-shadow-color);
-  text-align: center;
-  animation: float 2s ease-in-out infinite alternate;
-}
-
-.card-title {
-  display: block;
-  font-size: 2rem;
-  font-weight: bold;
-  color: var(--h2-color);
-  margin-bottom: 1rem;
-}
-
-.title-card-title {
-  font-size: 2rem;
-  font-weight: bold;
-  color: var(--h2-color);
-  margin-bottom: 1rem;
-}
-
-/* Title Cards */
-.title-card {
-  margin-bottom: 2rem;
-  padding: 1rem 2rem;
-  border: 2px solid var(--base-border-color);
-  border-radius: var(--base-border-radius);
-  background: var(--base-card-color);
-  box-shadow: var(--floating-card-shadow-offset)
-      var(--floating-card-shadow-Xw-offset)
-      var(--floating-card-shadow-Xh-offset) var(--card-shadow-color),
-    var(--floating-card-shadow-offset) var(--floating-card-shadow-Yw-offset)
-      var(--floating-card-shadow-Yh-offset) var(--card-shadow-color);
-  color: var(--h1-color);
-  text-align: center;
-  left: auto;
+/* Particle Accelerator Background */
+#particleAccelerator {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
 }
 
 /* Give some spacing between sections */
 .section-space {
-  width: 100%;
-  min-height: 100vh;
+  width: var(--section-space-width);
+  min-height: var(--section-space-height);
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 3rem 1rem;
+  scroll-snap-align: start;
+  overflow: hidden;
+  transition: transform 0.3s ease-out;
 }
 
 @media only screen and (max-width: 600px) {
@@ -194,6 +164,62 @@ body {
   100% {
     transform: translateY(-5px);
   }
+}
+
+/* Reusable Card Style */
+.card {
+  width: 70vw;
+  max-width: var(--max-card-width);
+  padding: 2rem;
+  border-radius: var(--base-border-radius);
+  border: 2px solid var(--base-border-color);
+  background: var(--base-card-color);
+  box-shadow: var(--floating-card-shadow-offset)
+      var(--floating-card-shadow-Xw-offset)
+      var(--floating-card-shadow-Xh-offset)
+      var(--card-shadow-color),
+      var(--floating-card-shadow-offset)
+      var(--floating-card-shadow-Yw-offset)
+      var(--floating-card-shadow-Yh-offset)
+      var(--card-shadow-color);
+  text-align: center;
+  animation: float 2s ease-in-out infinite alternate;
+}
+
+.card-title {
+  display: block;
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--h2-color);
+  margin-bottom: 1rem;
+}
+
+/* Title Cards */
+.title-card {
+  margin-bottom: 2rem;
+  padding: 1rem 2rem;
+  border: 2px solid var(--base-border-color);
+  border-radius: var(--base-border-radius);
+  background: var(--base-card-color);
+  box-shadow: var(--floating-card-shadow-offset)
+      var(--floating-card-shadow-Xw-offset)
+      var(--floating-card-shadow-Xh-offset)
+      var(--card-shadow-color),
+      var(--floating-card-shadow-offset)
+      var(--floating-card-shadow-Yw-offset)
+      var(--floating-card-shadow-Yh-offset)
+      var(--card-shadow-color);
+  color: var(--h1-color);
+  text-align: center;
+  width: calc(var(--small-card-space-width)-(var(--card-list-gap)*2));
+  left: calc((var(--section-space-width) - var(--max-card-width)) / 2);
+}
+
+.title-card-title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--h2-color);
+  margin-bottom: 1rem;
 }
 
 /* Barrel Roll Animation */
@@ -214,12 +240,9 @@ body {
 
 /* Home Card */
 .home {
-  position: absolute;
-  top: auto;
-  left: auto;
   width: 100%;
   height: auto;
-  /* max-width: var(--max-card-width); */
+  max-width: var(--max-card-width);
 }
 
 .profile-pic {
@@ -234,7 +257,7 @@ body {
   text-align: left;
   margin-left: 2rem;
   vertical-align: middle;
-  max-width: calc(60vw - 400px);
+  max-width: calc(100% - 250px);
   margin-top: auto;
   margin-bottom: auto;
 }
@@ -282,18 +305,6 @@ body {
   padding: 2rem;
 }
 
-.skills-list {
-  display: grid;
-  grid-template-columns: repeat(
-    auto-fill,
-    minmax(var(--max-small-card-width), 1fr)
-  );
-  gap: var(--card-list-gap);
-  justify-content: center;
-  margin-top: 2rem;
-  max-width: var(--small-card-space-width);
-}
-
 .skill-card {
   background: var(--base-card-color);
   border: var(--card-border-width) solid var(--base-border-color);
@@ -306,11 +317,23 @@ body {
   justify-self: center;
 }
 
+.skills-list {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(var(--max-small-card-width), 1fr)
+  );
+  gap: var(--card-list-gap);
+  justify-content: center;
+  margin-top: 2rem;
+  max-width: var(--small-card-space-width);
+}
+
 .skill-type {
   font-size: 1.4rem;
   font-weight: bold;
   color: var(--h3-color);
-  margin-bottom: 1rem;
+  /* margin-top: 20px; */
   text-align: center;
 }
 
@@ -323,7 +346,7 @@ body {
 
 .skill-list span {
   background: var(--chip-bg-color);
-  padding: 6px 12px;
+  padding: 6px 6px;
   border-radius: var(--base-border-radius);
   font-size: 0.9rem;
   color: var(--chip-text-color);
@@ -344,10 +367,7 @@ body {
 /* Individual Project Card */
 .projects-list {
   display: grid;
-  grid-template-columns: repeat(
-    auto-fit, 
-    var(--max-small-card-width)
-  );
+  grid-template-columns: repeat(auto-fit, var(--max-small-card-width));
   gap: var(--card-list-gap);
   justify-content: center;
   margin-top: 2rem;
@@ -614,7 +634,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: calc(var(--social-button-size)/2);
-  height: calc(var(--social-button-size)/2);
+  width: calc(var(--social-button-size) / 2);
+  height: calc(var(--social-button-size) / 2);
   color: var(--social-button-icon-color);
 }
