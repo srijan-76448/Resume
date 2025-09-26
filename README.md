@@ -1,6 +1,6 @@
 # 🚀 srijan-76448's Technical Portfolio & Resume
 
-A personal resume website built with `HTML`, `CSS` & `JavaScript`. All content is managed via a `JSON` file for easy updates. This repository hosts the source code for the site deployed via GitHub Pages at [![**srijan.76448.org**](https://srijan.76448.org/)](https://srijan.76448.org/).
+A personal resume website built with `HTML`, `CSS` & `JavaScript`. All content is managed via a `JSON` file for easy updates. This repository hosts the source code for the site deployed via GitHub Pages at [**srijan.76448.org**](https://srijan.76448.org/).
 
 <!-- ![version](https://img.shields.io/github/v/release/srijan-76448/Resume?style=plastic&color=brightgreen&label=Version) -->
 ![Visitors](https://visitor-badge.laobi.icu/badge?page_id=srijan-76448/Resume?label=Visitors&style=plastic)
