@@ -20,7 +20,7 @@
       "Welcome to my portfolio...",
       ""
     ],
-    "cursor": "█"
+    "cursor": "|"
   },
   "particle-acceletor": {
     "speed": 1.1,
@@ -41,3 +41,4 @@
   }
 
 }
+
