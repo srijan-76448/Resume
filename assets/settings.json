@@ -17,7 +17,8 @@
       "Receiving the rendering data.",
       "Processing rendering data.",
       "Building page layout with graphics.",
-      "Welcome to my portfolio..."
+      "Welcome to my portfolio...",
+      ""
     ],
     "cursor": "█"
   },
@@ -38,4 +39,5 @@
       "#ff00ff"
     ]
   }
+
 }
