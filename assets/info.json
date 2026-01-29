@@ -8,14 +8,26 @@
   },
   "projects": [
     {
-      "name": "ISHA (Integrated Smart Home Assistant)",
-      "description": "ISHA is an innovative AI assistant designed to revolutionize the way you interact with technology. As a versatile and intelligent companion, ISHA can assist you with a wide range of tasks, from simple queries to complex problem-solving, Smart Home Automation.",
-      "link": "",
+      "name": "I.S.H.A (Integrated Systematic Heuristic Agent)",
+      "description": "ISHA is a multi-layered, open-source framework that bridges complex philosophy and psychology with AI and Robotics to achieve autonomous, human-like reasoning and goal-oriented evolution.",
+      "link": "https://isha.76448.org",
       "image": ""
     },
     {
       "name": "DevOS EcoSystem",
       "description": "DevOS EcoSystem is a unified suite of operating systems for desktops, laptops, mobiles, wearables, Raspberry Pi, and cars. With a shared core, DevPKG manager, and OctaConn connectivity, it ensures seamless integration, customization, and effortless inter-device communication across different platforms.",
+      "link": "",
+      "image": ""
+    },
+    {
+      "name": "The BUG",
+      "description": "The BUG is the world’s smallest LFR hard coded in Assembly of 15x15x8 mm [LxBxH].",
+      "link": "",
+      "image": ""
+    },
+    {
+      "name": "The AVR/ESP Programmer Board",
+      "description": "A versatile dual-sided hardware tool designed to program and communicate with various robotics and IoT microchips based on AVR (ISP) and ESP (UART) using a compact, professional-grade circuit board.",
       "link": "",
       "image": ""
     }
@@ -167,4 +179,5 @@
     },
     "contact-text": "Feel free to reach out to me via email or connect with me on social media!"
   }
+
 }
