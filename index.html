@@ -1,127 +1,314 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en" data-theme="dark">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/webp" href="assets/imgs/logo.webp" id="web-icon" />
-    <title id="web-title">My Portfolio</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0b1014" />
+    <meta
+      name="description"
+      content="Robotics, embedded systems, and software engineering portfolio."
+    />
+    <title>Portfolio | Robotics &amp; Embedded Systems</title>
+    <link
+      rel="icon"
+      type="image/webp"
+      href="assets/imgs/logo.webp"
+      id="web-icon"
+    />
     <link rel="stylesheet" href="index.css" />
+    <script src="index.js" defer></script>
   </head>
   <body>
-    <div id="loadingScreen" class="loading-screen"></div>
-    <canvas id="particleAccelerator"></canvas>
-    <!-- Home Card -->
-    <div class="home-space section-space">
-      <div id="home" class="home card">
-        <img
-          id="profile-pic"
-          src=""
-          alt="Srijan Bhattacharyya"
-          align="right"
-          class="profile-pic"
-        />
-        <div class="text-area" align="left">
-          <span id="user-name" class="user-name">Srijan Bhattacharyya</span>
-          <br />
-          <span id="user-details" class="user-details"></span>
-          <br />
-          <p id="user-short-description" class="user-short-description"></p>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div
+      id="loadingScreen"
+      class="loading-screen"
+      role="status"
+      aria-live="polite"
+    >
+      <div class="loading-terminal">
+        <span class="eyebrow">SYSTEM / PORTFOLIO</span>
+        <p>Initializing engineering workspace…</p>
+      </div>
+    </div>
+    <canvas id="particleAccelerator" aria-hidden="true"></canvas>
+    <header class="site-header">
+      <a class="brand" href="#home" aria-label="Go to home"
+        ><span class="brand-mark">S<span>.</span></span
+        ><span class="brand-label">ENGINEERING PORTFOLIO</span></a
+      >
+      <button
+        id="nav-toggle"
+        class="nav-toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="site-nav"
+      >
+        Menu
+      </button>
+      <nav id="site-nav" class="site-nav" aria-label="Main navigation">
+        <a href="#home">Home</a><a href="#about">About</a
+        ><a href="#education">Education</a><a href="#skills">Skills</a
+        ><a href="#projects">Projects</a><a href="#memberships">Community</a
+        ><a href="#contact">Contact</a>
+      </nav>
+      <div class="header-actions">
+        <button
+          id="theme-toggle"
+          class="icon-button"
+          type="button"
+          aria-label="Switch to light theme"
+          title="Toggle theme"
+        >
+          ◐</button
+        ><a class="button button-small" href="#cv-builder"
+          >Build CV <span aria-hidden="true">↗</span></a
+        >
+      </div>
+    </header>
+
+    <main id="main">
+      <section id="home" class="hero section-wrap">
+        <div class="hero-copy">
+          <p class="eyebrow">
+            <span class="status-dot"></span> ROBOTICS · EMBEDDED SYSTEMS ·
+            SOFTWARE
+          </p>
+          <h1>
+            Building at the<br /><span class="accent-text"
+              >hardware–software</span
+            ><br />boundary.
+          </h1>
+          <p id="user-short-description" class="hero-summary">
+            Embedded systems, practical engineering, and software built to work
+            with the physical world.
+          </p>
+          <div class="hero-actions">
+            <a class="button" href="#projects"
+              >Explore projects <span aria-hidden="true">↓</span></a
+            ><a class="button button-quiet" href="#contact">Get in touch</a>
+          </div>
+          <div class="hero-meta">
+            <span><i></i> Kolkata, India</span
+            ><span>OPEN TO ENGINEERING COLLABORATION</span>
+          </div>
         </div>
-      </div>
-    </div>
-
-    <!-- About Card -->
-    <div class="about-space section-space">
-      <div id="about" class="about card">
-        <span id="about-title" class="about-title card-title">About Me</span>
-        <p id="about-description" class="about-description"></p>
-      </div>
-    </div>
-
-    <!-- Skills Card -->
-    <div class="skills-space section-space">
-      <div id="skills" class="skills">
-        <div class="title-card">
-          <span id="skills-title" class="skills-title title-card-title"
-            >Skills</span
-          >
+        <div class="hero-visual" aria-label="Abstract engineering illustration">
+          <div class="visual-grid"></div>
+          <div class="orbit orbit-one"></div>
+          <div class="orbit orbit-two"></div>
+          <div class="core-chip">
+            <span class="chip-pins"></span
+            ><span class="chip-label">SYSTEM<br />CORE</span
+            ><span class="chip-center">S<span>.</span></span>
+          </div>
+          <span class="visual-tag tag-top">FIG 01 / INTEGRATION</span
+          ><span class="visual-tag tag-bottom">DESIGN · BUILD · ITERATE</span>
+          <span class="crosshair crosshair-a">+</span
+          ><span class="crosshair crosshair-b">+</span>
         </div>
-        <div id="skills-list" class="skills-list"></div>
-      </div>
-    </div>
-
-    <!-- Projects Card -->
-    <div class="projects-space section-space">
-      <div class="projects">
-        <div class="title-card">
-          <span id="projects-title" class="projects-title title-card-title"
-            >Projects</span
-          >
+        <div class="hero-index">
+          <span>01</span><span class="index-line"></span><span>PROFILE</span>
         </div>
-        <div id="projects-list" class="projects-list"></div>
-      </div>
-    </div>
+      </section>
 
-    <!-- Contact Us Card -->
-    <div class="contact-us-space section-space">
-      <div id="contact" class="contact card">
-        <span id="contact-form-title" class="contact-form-title card-title">
-          Join Us
-        </span>
+      <section id="about" class="content-section section-wrap">
+        <div class="section-heading">
+          <p class="eyebrow">01 / PROFILE</p>
+          <h2>Curiosity, <span class="accent-text">made tangible.</span></h2>
+        </div>
+        <div class="about-grid">
+          <p id="about-description" class="about-copy"></p>
+          <div class="about-aside">
+            <span class="aside-label">CURRENT FOCUS</span>
+            <p>
+              Embedded computing<br />Robotics &amp; control<br />Open
+              engineering
+            </p>
+            <span class="aside-rule"></span
+            ><span class="aside-label">WORKING PRINCIPLE</span>
+            <p>
+              Understand the system.<br />Build the smallest useful version.<br />Test,
+              measure, improve.
+            </p>
+          </div>
+        </div>
+      </section>
 
-        <div class="contact-container">
-          <!-- LEFT: Info -->
-          <div class="contact-info">
-            <p id="contact-description" class="contact-description"></p>
-            <br class="page-break"/>
-            <span id="email-address" class="email-address"></span>
-            <br class="page-break"/>
+      <section id="education" class="content-section section-wrap">
+        <div class="section-heading">
+          <p class="eyebrow">02 / FOUNDATION</p>
+          <h2>Education<span class="accent-text">.</span></h2>
+        </div>
+        <div id="education-list" class="education-list">
+          <p class="muted">Loading education data…</p>
+        </div>
+        <p id="academic-status" class="data-status" aria-live="polite"></p>
+      </section>
+
+      <section id="skills" class="content-section section-wrap">
+        <div class="section-heading">
+          <p class="eyebrow">03 / TOOLKIT</p>
+          <h2>Skills &amp; systems<span class="accent-text">.</span></h2>
+          <p class="section-intro">
+            A working toolkit across code, electronics, and system integration.
+          </p>
+        </div>
+        <div id="skills-list" class="skills-grid"></div>
+      </section>
+
+      <section id="projects" class="content-section section-wrap">
+        <div class="section-heading">
+          <p class="eyebrow">04 / SELECTED WORK</p>
+          <h2>Projects<span class="accent-text">.</span></h2>
+          <p class="section-intro">
+            Experiments and systems that connect software to the real world.
+          </p>
+        </div>
+        <div id="projects-list" class="projects-grid"></div>
+      </section>
+
+      <section id="memberships" class="content-section section-wrap">
+        <div class="section-heading">
+          <p class="eyebrow">05 / COMMUNITY</p>
+          <h2>Beyond the workbench<span class="accent-text">.</span></h2>
+        </div>
+        <div class="community-grid">
+          <div>
+            <h3>Memberships &amp; communities</h3>
+            <ul id="memberships-list" class="simple-list"></ul>
+          </div>
+          <div>
+            <h3>Languages</h3>
+            <div id="languages-list" class="language-list"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="cv-builder" class="content-section section-wrap">
+        <div class="section-heading">
+          <p class="eyebrow">06 / CAREER TOOL</p>
+          <h2>Build a role-focused CV<span class="accent-text">.</span></h2>
+          <p class="section-intro">
+            Create a tailored preview from the verified profile data. The
+            browser version works without sending your profile to a third party.
+          </p>
+        </div>
+        <div class="cv-builder-panel">
+          <label for="cv-role">Target job role</label>
+          <div class="cv-input-row">
+            <input
+              id="cv-role"
+              type="text"
+              placeholder="e.g. Embedded Systems Engineer"
+              autocomplete="organization-title"
+            /><button id="generate-cv" class="button" type="button">
+              Assess &amp; preview
+            </button>
+          </div>
+          <p class="form-hint">
+            Compatibility is a keyword-based estimate, not a hiring prediction.
+            Missing profile details are treated as undocumented, not as proof
+            you lack them.
+          </p>
+          <div
+            id="cv-assessment"
+            class="assessment"
+            hidden
+            aria-live="polite"
+          ></div>
+          <div class="cv-actions">
+            <button
+              id="print-cv"
+              class="button button-quiet"
+              type="button"
+              disabled
+            >
+              Print / Save as PDF</button
+            ><button id="close-cv" class="text-button" type="button" hidden>
+              Close preview
+            </button>
+          </div>
+          <div id="cv-preview" class="cv-preview" hidden></div>
+        </div>
+      </section>
+
+      <section
+        id="contact"
+        class="content-section section-wrap contact-section"
+      >
+        <div class="section-heading">
+          <p class="eyebrow">07 / CONNECT</p>
+          <h2>
+            Have a system to build?<br /><span class="accent-text"
+              >Let's talk.</span
+            >
+          </h2>
+        </div>
+        <div class="contact-grid">
+          <div>
+            <p id="contact-description" class="section-intro">
+              Reach out for engineering conversations, open-source
+              collaboration, and robotics projects.
+            </p>
+            <p id="email-address" class="email-address"></p>
             <div id="social-links" class="social-links"></div>
           </div>
-
-          <!-- RIGHT: Form -->
-          <div id="contact-form" class="contact-form">
-            <input
-              type="text"
+          <form id="contact-form" class="contact-form">
+            <label for="name">Name</label
+            ><input
               id="name"
               name="name"
               required
-              placeholder="Your Name"
-              class="contact-form-entry"
+              placeholder="Your name"
+              autocomplete="name"
             />
-            <input
-              type="email"
+            <label for="email">Email</label
+            ><input
               id="email"
               name="email"
+              type="email"
               required
-              placeholder="Your Email"
-              class="contact-form-entry"
+              placeholder="you@example.com"
+              autocomplete="email"
             />
-            <textarea
+            <label for="message">Message</label
+            ><textarea
               id="message"
               name="message"
               required
-              placeholder="Write your message here"
-              class="message-box contact-form-entry"
+              rows="4"
+              placeholder="What would you like to discuss?"
             ></textarea>
-            <button
-              type="submit"
-              id="submit"
-              class="contact-form-submit-button"
-            >
-              Send
+            <button class="button" type="submit">
+              Prepare email <span aria-hidden="true">↗</span>
             </button>
-          </div>
+            <p class="form-hint">
+              This opens your email app; nothing is sent automatically.
+            </p>
+          </form>
         </div>
-      </div>
-    </div>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <span
+        >© <span id="current-year"></span>
+        <span id="footer-name">Portfolio</span></span
+      ><span>BUILT WITH VANILLA HTML · CSS · JS</span
+      ><a href="#home">Back to top ↑</a>
+    </footer>
 
-    <!-- Project Popup -->
-    <div id="project-popup" class="project-popup">
-      <div id="project-popup-content" class="project-popup-content"></div>
-    </div>
-
-    <script src="index.js"></script>
+    <dialog id="project-dialog" class="project-dialog">
+      <button
+        id="project-dialog-close"
+        class="dialog-close"
+        type="button"
+        aria-label="Close project details"
+      >
+        ×
+      </button>
+      <div id="project-dialog-content"></div>
+    </dialog>
+    <div id="app-status" class="sr-only" role="status" aria-live="polite"></div>
   </body>
 </html>
-

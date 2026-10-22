@@ -1,81 +1,189 @@
-# 🚀 srijan-76448's Technical Portfolio & Resume
+# Srijan Bhattacharyya — Robotics & Embedded Systems Portfolio
 
-A personal resume website built with `HTML`, `CSS` & `JavaScript`. All content is managed via a `JSON` file for easy updates. This repository hosts the source code for the site deployed via GitHub Pages at [**srijan.76448.org**](https://srijan.76448.org/).
+A lightweight, responsive personal portfolio focused on robotics, embedded systems, software, and engineering projects. The site is built with vanilla HTML, CSS, and JavaScript, with profile content separated into JSON files so that most updates do not require editing the UI code.
 
-![version](https://img.shields.io/badge/WebFolio-V--1.0.1-brightgreen?style=plastic)
-[![Last Updated](https://img.shields.io/github/last-commit/srijan-76448/Resume/main?label=Last%20Updated&style=plastic&display_timestamp=committer)](https://github.com/srijan-76448/Resume/pulse/monthly)
-[![Commits](https://img.shields.io/github/commit-activity/m/srijan-76448/Resume?label=Commits&style=plastic)](https://github.com/srijan-76448/Resume/commits)
-[![License](https://img.shields.io/badge/-License-blue.svg?style=plastic)](LICENSE)
-![Visitors](https://visitor-badge.laobi.icu/badge?page_id=srijan-76448/Resume&label=Visitors&style=plastic)
+**Live website:** https://srijan.76448.org  
+**GitHub profile:** https://github.com/srijan-76448
 
-## ✨ Project Highlights
+---
 
-This resume is built to demonstrate strong **front-end development**, **UX focus**, and **component-based organization**, reflecting expertise across my core interests (**IoT**, **Robotics**, **AI/ML**, **FOSS**, and **complex embedded systems design**).
+## Features
 
-### Key Features:
+- Responsive portfolio layout for desktop and mobile.
+- Dark/light theme toggle.
+- Content-driven profile, education, skills, projects, memberships, languages, and contact sections.
+- Project cards that combine manually curated entries with automatically synchronized pinned GitHub repositories.
+- Manual project entries take priority over automatically discovered GitHub entries when they refer to the same project.
+- CV generator with a role-relevance assessment, preview, and browser print-to-PDF workflow.
+- Contact actions, including preparing an email through the visitor's configured email application.
+- Reduced-motion-aware animation behavior.
+- Plain HTML, CSS, and JavaScript—no frontend framework or build step required.
 
-- **Dynamic content rendering**: the `JavaScript` reads from a `JSON` configuration file and injects content into the `HTML`.
-- **Responsive Design:** Optimized for all screen sizes (`Desktop`, `Tablet`, `Mobile`).
-- **Easy to update**: you only need to modify the JSON data to change content (e.g. `skills`, `projects`, `contact`, `about`, etc.).
-- **Minimal dependencies**: no heavy frameworks — pure vanilla `HTML` / `CSS` / `JS`.
+> Some features depend on the site's configuration and deployment environment. The CV role assessment is a rule-based aid, not a hiring prediction or a substitute for reviewing the candidate's actual qualifications.
 
-## 💻 Technology Stack
+## Technology
 
-- **Front-End:** `HTML5`, `CSS3`, `JavaScript` (`Vanilla JS/ES6+`)
-- **Styling:** Custom `CSS` for high control and minimal overhead.
-- **Deployment:** `GitHub Pages` & Custom Domain ([CNAME](CNAME) file).
+- HTML5
+- CSS3
+- Vanilla JavaScript
+- JSON for portfolio and settings data
+- GitHub GraphQL API for retrieving pinned repositories
+- GitHub Actions for scheduled project-feed updates
+- Browser print dialog for exporting the CV to PDF
 
-<!-- ## 🛠️ How to Use / Run Locally
+---
 
-1. **Fork the repository**
+## Project structure
 
-    Click the "Fork" button in the top-right corner of the repository to create a new copy for your personal use.
-
-2. **Clone the repository**
-
-    ```bash
-    git clone https://github.com/srijan-76448/Resume.git
-    cd Resume
-    ```
-
-3. **Open it in your browser**
-    Simply double-click `index.html` or serve it via a local HTTP server (recommended for JS import paths):
-
-    ```bash
-    # Using Python 3:
-    python3 -m http.server 8000
-    ```
-
-   Then visit `http://localhost:8000` in your browser.
-
-4. **Edit content**
-    All personal info, skills, education, experience, etc. are configured via a JSON file (e.g. `data.json` or similar — locate where JSON is loaded in `index.js`). Change values there and reload the page to see updates.
-
-## 🎨 Customization Tips & Suggestions
-
-- Add or remove sections (e.g. Certifications, Hobbies) by extending the JSON schema and updating rendering logic in `index.js`.
-- Tweak the styling (colors, fonts, layout) in `index.css` to match your personal branding.
-- Add smooth scroll, animations, or theming toggles for more polish.
-- Use a free hosting service (GitHub Pages, Netlify, Vercel) to deploy your resume online. -->
-
-## 📂 File Structure
-
-```
-├── assets/
-│   ├── imgs/
-│   │   ├── pfp.jpg
-│   │   └── logo.webp
-│   ├── settings.json
-│   └── info.json
+```text
+Resume/
 ├── index.html
 ├── index.css
 ├── index.js
 ├── README.md
-└── CNAME
+├── assets/
+│   ├── info.json
+│   ├── settings.json
+│   ├── github-projects.json
+│   └── imgs/
+│       ├── logo.webp
+│       └── pfp.jpg
+├── scripts/
+│   └── sync-pinned-projects.mjs
+└── .github/
+    └── workflows/
+        └── sync-pinned-projects.yml
 ```
 
-## 📬 Contact & Attribution
+The image files shown above are expected asset paths; keep the actual filenames and paths consistent with your configuration.
 
-Built by **Srijan Bhattacharyya** ([@srijan-76448](https://github.com/srijan-76448)) <br>Fell in love with technology. <br>If you use or modify this project, feel free to give credit or link back. <br>Feel free to connect or reach out regarding projects, open-source collaboration, or roles.
+## Configuration and content
 
-**Gmail:** [srijan.76448@gmail.com](mailto:srijan.76448@gmail.com)
+### `assets/info.json`
+
+This file contains the portfolio's editable content. The V2 schema supports fields such as:
+
+- `PROFILE` — name, title, biography, and short description.
+- `EDUCATION` — degree, institution, duration, and academic details.
+- `SKILLS` — skill categories and their items.
+- `PROJECTS` — projects curated by the portfolio owner.
+- `MEMBERSHIPS` — organizations and communities.
+- `LANGUAGES` — spoken or written languages.
+- `CONTACT` — email, phone, location, and social links.
+
+The JavaScript also supports the original V1 JSON shape for backward compatibility. Use the schema already present in your deployed `info.json`; do not mix V1 and V2 structures casually.
+
+### Manually curated projects
+
+Add projects you explicitly want to feature in the `PROJECTS` array in `assets/info.json`. These entries are the source of truth for your custom descriptions and presentation. When a manually curated project duplicates a pinned GitHub repository, the manual entry should be displayed instead of a second copy.
+
+### `assets/settings.json`
+
+Controls supported site settings such as theme, navigation, animations, branding, and data synchronization. If you use the V2 settings schema and want the GitHub feed enabled, ensure the GitHub sync setting is enabled, for example:
+
+```json
+{
+  "DATA_SYNC": {
+    "github": {
+      "enabled": true,
+      "refreshIntervalMinutes": 60,
+      "publicDataOnly": true
+    }
+  }
+}
+```
+
+Merge this into the existing settings file rather than replacing unrelated settings.
+
+### `assets/github-projects.json`
+
+This is the generated feed consumed by the portfolio. The synchronization workflow updates it from the GitHub profile's pinned repositories. Avoid manually editing this file because the next successful workflow run can overwrite it.
+
+---
+
+## GitHub pinned-project synchronization
+
+The project feed is updated by the Node.js script at `scripts/sync-pinned-projects.mjs`. The workflow in `.github/workflows/sync-pinned-projects.yml` can be run manually and is configured for scheduled runs.
+
+### One-time setup
+
+1. Push the portfolio files to your GitHub repository.
+2. In the repository, open **Settings → Secrets and variables → Actions**.
+3. Add a repository secret named `PROFILE_READ_TOKEN` containing a GitHub token suitable for the GraphQL query used by the sync script. Never put this token in `index.js`, `assets/settings.json`, or any browser-delivered file.
+4. Confirm that Actions are enabled for the repository.
+5. Under **Settings → Actions → General**, allow the workflow to write repository contents if required by the repository's policy. The workflow requests `contents: write` so it can commit the refreshed JSON feed.
+6. Open **Actions → Sync pinned GitHub projects** and select **Run workflow**.
+7. Check the workflow run and confirm that `assets/github-projects.json` is updated and committed.
+
+The workflow is configured to run every six hours. GitHub may delay scheduled jobs, and schedule availability can be affected by repository activity or platform policies. Manual runs are useful for testing.
+
+### What gets synchronized?
+
+The generated feed includes public repository metadata returned by the script, such as repository name, URL, description, last update time, stars, archived/fork/template flags, and topics when available.
+
+- Pinned repositories are included automatically after a successful sync.
+- Manually curated entries remain in control and take precedence over duplicates.
+- If a repository is unpinned, it should disappear from the automatic feed on the next successful sync unless it is also manually listed.
+- If the workflow fails, the last committed feed remains available.
+
+### Troubleshooting
+
+- **No GitHub projects appear:** Check that the workflow completed successfully, the secret is configured, the generated JSON file was committed, and the deployed site serves `assets/github-projects.json`.
+- **The feed is empty:** Confirm that the GitHub account has pinned repositories and inspect the workflow logs for GraphQL errors.
+- **Workflow cannot push a commit:** Check the workflow's `contents: write` permission and the repository's Actions permission settings.
+- **Projects do not update on the live website:** Verify that your deployment publishes the updated JSON file and that the host/CDN is not serving a stale cached copy.
+- **V2 settings disable the feed:** Check `DATA_SYNC.github.enabled` in `assets/settings.json`.
+
+---
+
+## CV generator
+
+The CV generator lets a visitor enter a target role, review the available role-relevance assessment, preview the CV, and use the browser's print dialog to save it as a PDF.
+
+- The assessment is heuristic and depends on the profile data currently supplied.
+- A warning means that the portfolio data does not show enough relevant evidence; it does not prove that the person is incapable of doing the job.
+- Review the preview before exporting. Browser print settings, fonts, and paper settings can affect the final PDF.
+- Keep all qualifications, dates, grades, and experience accurate. The generator should not be treated as permission to invent credentials.
+
+## Local development
+
+No package installation or frontend build is required for the static site.
+
+1. Clone or download the repository.
+2. Edit `assets/info.json` and `assets/settings.json` as needed.
+3. Serve the repository root with a local static HTTP server. For example, if Python is installed:
+
+   ```bash
+   python -m http.server 8000
+   ```
+
+4. Open `http://localhost:8000` in your browser.
+
+Using a local HTTP server is recommended because browser security rules can prevent `fetch()` from loading JSON when the HTML file is opened directly using a `file://` URL.
+
+To test the pinned-project synchronization script locally, use a supported Node.js version with `fetch` available (Node.js 18+ is a practical baseline; Node.js 22 is recommended for consistency with the workflow), set the required environment variables, and run:
+
+```bash
+GITHUB_PROFILE_USERNAME=srijan-76448 GITHUB_TOKEN=YOUR_TOKEN node scripts/sync-pinned-projects.mjs
+```
+
+Do not commit the token or paste it into source files. If the script's environment-variable names differ in your checked-in version, follow the names defined in that script and workflow.
+
+## Accessibility and performance notes
+
+- Prefer semantic HTML and keyboard-operable controls.
+- Respect reduced-motion preferences.
+- Keep image sizes optimized and provide meaningful alternative text.
+- Avoid exposing API tokens or private data to client-side code.
+- The portfolio is static-first; any feature that needs secrets or privileged API access belongs in a server-side script or CI workflow, not in browser JavaScript.
+
+## License
+
+No license is specified here. Add a `LICENSE` file and update this section if you want to grant explicit reuse, modification, or redistribution rights.
+
+## Author
+
+**Srijan Bhattacharyya**
+
+- Portfolio: https://srijan.76448.org
+- GitHub: https://github.com/srijan-76448

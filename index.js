@@ -1,524 +1,870 @@
-// --- Fetch JSON Helper ---
-async function fetchJSON(path) {
-  const response = await fetch(path);
-  if (!response.ok) {
-    throw new Error(`Failed to fetch ${path}`);
-  }
-  return response.json();
-}
-
-// --- Render Webpage Icon ---
-function renderWebpageIcon(iconPath) {
-  const webIcon = document.getElementById("web-icon");
-  webIcon.href = iconPath;
-}
-
-// --- Show Loading Screen ---
-function showLoadingScreen(loadingScreenSettings) {
-  // NOTE: cursor and prefix are hardcoded based on the provided script-1 logic.
-  const cursor = loadingScreenSettings.cursor;
-  const prefix = '<span class="ps-prefix">[  YES  ]</span> ';
-
-  const messages = loadingScreenSettings.messageList;
-  const loadingScreen = document.getElementById("loadingScreen");
-
-  if (!messages || messages.length === 0 || !loadingScreen) {
-    if (loadingScreen) loadingScreen.classList.add("hidden");
-    return;
-  }
-
-  loadingScreen.classList.remove("hidden");
-  loadingScreen.innerHTML = ""; // Clear previous content
-
-  const loadingTerminal = document.createElement("div");
-  loadingTerminal.className = "loading-terminal";
-  loadingScreen.appendChild(loadingTerminal);
-
-  // The last message in the array is treated as the final welcome/ready text
-  const welcomeText = messages[messages.length - 1];
-  const loadingMessages = messages.slice(0, -1);
-
-  let i = 0;
-  const messageDuration = 800; // Time between messages
-
-  const typeMessage = () => {
-    // Stop if the screen is hidden by the hideLoadingScreen() timer
-    if (loadingScreen.classList.contains("hidden")) return;
-
-    if (i < loadingMessages.length) {
-      // Display loading message
-      loadingTerminal.innerHTML += `<p>${prefix}${loadingMessages[i]}<span class="cursor">${cursor}</span></p>`;
-      loadingTerminal.scrollTop = loadingTerminal.scrollHeight;
-      i++;
-      setTimeout(typeMessage, messageDuration);
-    } else {
-      // Display final welcome message after a short delay
-      setTimeout(() => {
-        if (loadingScreen.classList.contains("hidden")) return;
-        loadingTerminal.innerHTML += `<p>${prefix}${welcomeText}<span class="cursor">${cursor}</span></p>`;
-        loadingTerminal.scrollTop = loadingTerminal.scrollHeight;
-      }, messageDuration);
+(() => {
+  "use strict";
+  const $ = (selector, root = document) => root.querySelector(selector);
+  const $$ = (selector, root = document) => [
+    ...root.querySelectorAll(selector),
+  ];
+  const escapeHTML = (value) =>
+    String(value ?? "").replace(
+      /[&<>"']/g,
+      (ch) =>
+        ({
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#39;",
+        })[ch],
+    );
+  const safeUrl = (value) => {
+    try {
+      const u = new URL(value, location.href);
+      return ["http:", "https:", "mailto:"].includes(u.protocol) ? u.href : "";
+    } catch {
+      return "";
     }
   };
-
-  typeMessage();
-}
-
-// --- Hide Loading Screen ---
-function hideLoadingScreen(loadingTimeLimit) {
-  const loadingScreenElement = document.getElementById("loadingScreen");
-  if (!loadingScreenElement) return;
-
-  // Wait for the specified time limit, then hide and cleanup
-  setTimeout(() => {
-    loadingScreenElement.classList.add("hidden");
-    loadingScreenElement.innerHTML = ""; // Cleanup content
-
-    // Force the page to scroll to the top
-    window.scrollTo(0, 0);
-  }, loadingTimeLimit);
-}
-
-// --- Particle Accelerator Effect (Updated) ---
-class ParticleAccelerator {
-  constructor(canvas, settings) {
-    // <-- Now accepts settings
-    this.canvas = canvas;
-    this.ctx = canvas.getContext("2d");
-    this.particles = [];
-    this.mouse = { x: 0, y: 0 };
-
-    // --- Configurable properties loaded from settings ---
-    this.particleCount = settings["no-of-particles"];
-    this.minSize = settings["min-particle-size"];
-    this.maxSize = settings["max-particle-size"];
-    this.maxOpacity = (settings["particle-opacity"]/100);
-    this.speed = settings.speed;
-    this.colors = settings.colors;
-
-    this.resize();
-    this.init();
-    this.animate();
-
-    // --- Event listeners ---
-    window.addEventListener("resize", () => this.resize());
-    canvas.addEventListener("mousemove", (e) => this.handleMouseMove(e));
+  let info = null,
+    settings = null,
+    projects = [],
+    education = [],
+    skills = {},
+    memberships = [],
+    languages = [],
+    contact = {};
+  const STORAGE_THEME = "portfolio-theme-v2";
+  function announce(message) {
+    const status = $("#app-status");
+    if (status) status.textContent = message;
   }
-
-  resize() {
-    this.canvas.width = window.innerWidth;
-    this.canvas.height = window.innerHeight;
+  async function fetchJSON(path) {
+    const response = await fetch(path, { cache: "no-cache" });
+    if (!response.ok)
+      throw new Error(`Unable to load ${path} (${response.status})`);
+    return response.json();
   }
-
-  init() {
-    this.particles = [];
-
-    for (let i = 0; i < this.particleCount; i++) {
-      const size = Math.random() * (this.maxSize - this.minSize) + this.minSize;
-      const initialVelocity = (Math.random() - 0.5) * this.speed;
-      const opacity = this.maxOpacity;
-
-      this.particles.push({
-        x: Math.random() * this.canvas.width,
-        y: Math.random() * this.canvas.height,
-        vx: initialVelocity,
-        vy: initialVelocity,
-        size: size,
-        opacity: opacity,
-        color: this.getRandomColor(),
-      });
+  function normalizeData(rawInfo, rawSettings) {
+    // Supports the V2 schema and the original V1 JSON so existing content remains usable.
+    const v2 = Boolean(
+      rawInfo.PROFILE || rawInfo.EDUCATION || rawInfo.PROJECTS,
+    );
+    const oldUser = rawInfo["user-info"] || {};
+    const profile = v2
+      ? rawInfo.PROFILE || {}
+      : {
+          name: oldUser["user-name"],
+          title: oldUser["user-details"],
+          "about-me": oldUser["about-me"],
+          "short-description": oldUser["user-short-description"],
+          "profile-image": oldUser["profile-pic"],
+        };
+    projects = v2 ? rawInfo.PROJECTS || [] : rawInfo.projects || [];
+    projects = projects.map((p) => ({
+      ...p,
+      url: p.url || p.link || "",
+      description: p.description || p.descripton || "",
+      image: p.image || "",
+    }));
+    education = v2 ? rawInfo.EDUCATION || [] : [];
+    skills = v2 ? rawInfo.SKILLS || {} : rawInfo.skills || {};
+    memberships = v2 ? rawInfo.MEMBERSHIPS || [] : [];
+    languages = v2 ? rawInfo.LANGUAGES || [] : [];
+    contact = v2 ? rawInfo.CONTACT || {} : rawInfo.contact || {};
+    if (!v2 && contact.socials) {
+      contact = {
+        ...contact,
+        email: contact.socials.email?.url,
+        socials: Object.fromEntries(
+          Object.entries(contact.socials)
+            .filter(([k]) => k !== "email")
+            .map(([k, v]) => [k, { url: v.url, icon: k }]),
+        ),
+      };
+      contact.message = contact["contact-text"] || "";
+    }
+    return { profile, rawInfo, v2, rawSettings };
+  }
+  function applyTheme() {
+    const saved = localStorage.getItem(STORAGE_THEME);
+    const configured = settings?.THEME?.mode || "dark";
+    const theme = saved || configured;
+    document.documentElement.dataset.theme =
+      theme === "light" ? "light" : "dark";
+    const button = $("#theme-toggle");
+    if (button) {
+      button.setAttribute(
+        "aria-label",
+        theme === "light" ? "Switch to dark theme" : "Switch to light theme",
+      );
+      button.textContent = theme === "light" ? "☼" : "◐";
     }
   }
-
-  getRandomColor() {
-    return this.colors[Math.floor(Math.random() * this.colors.length)];
+  function setupTheme() {
+    applyTheme();
+    $("#theme-toggle")?.addEventListener("click", () => {
+      const next =
+        document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+      document.documentElement.dataset.theme = next;
+      localStorage.setItem(STORAGE_THEME, next);
+      applyTheme();
+    });
+  }
+  function setupNavigation() {
+    const toggle = $("#nav-toggle"),
+      nav = $("#site-nav");
+    toggle?.addEventListener("click", () => {
+      const open = nav.classList.toggle("open");
+      toggle.setAttribute("aria-expanded", String(open));
+    });
+    $$("#site-nav a").forEach((link) =>
+      link.addEventListener("click", () => {
+        nav.classList.remove("open");
+        toggle?.setAttribute("aria-expanded", "false");
+      }),
+    );
+  }
+  function hideLoadingScreen() {
+    const screen = $("#loadingScreen");
+    if (screen) {
+      screen.classList.add("hidden");
+      window.setTimeout(() => screen.remove(), 550);
+    }
+  }
+  function renderProfile(profile) {
+    const name = profile.name || "Portfolio";
+    document.title = `${name}${settings?.BRANDING?.pageTitleSuffix || " | Robotics & Embedded Systems"}`;
+    const icon = settings?.BRANDING?.logo || settings?.icon;
+    if (icon) $("#web-icon").href = icon;
+    const authoredShort = (
+      profile["short-description"] ||
+      profile["user-short-description"] ||
+      ""
+    ).trim();
+    // Only use an authored short description when it is genuinely distinct from the long bio.
+    const about = String(profile["about-me"] || "").trim();
+    const shortDescription =
+      authoredShort && authoredShort.toLowerCase() !== about.toLowerCase()
+        ? authoredShort
+        : buildShortDescription(profile);
+    $("#user-short-description").textContent = shortDescription;
+    $("#about-description").textContent =
+      profile["about-me"] || "Profile details will be available soon.";
+    $("#footer-name").textContent = name;
+    $("#current-year").textContent = new Date().getFullYear();
+  }
+  function buildShortDescription(profile) {
+    const name = String(profile.name || "").trim();
+    const title = String(profile.title || "engineering professional").trim();
+    const skillNames = Object.values(skills)
+      .flat()
+      .map(String)
+      .map((s) => s.trim())
+      .filter(Boolean)
+      .slice(0, 5);
+    const projectNames = projects
+      .map((p) => String(p.name || "").trim())
+      .filter(Boolean)
+      .slice(0, 2);
+    const field = education
+      .map((e) =>
+        [e.degree, e["field-of-study"] || e.stream]
+          .filter(Boolean)
+          .join(" in "),
+      )
+      .filter(Boolean)[0];
+    const opening = name
+      ? `${name} is a ${title.toLowerCase()} interested in building practical, reliable systems.`
+      : `A ${title.toLowerCase()} interested in building practical, reliable systems.`;
+    const parts = [opening];
+    if (field) parts.push(`Academic background: ${field}.`);
+    if (skillNames.length)
+      parts.push(`Technical toolkit includes ${skillNames.join(", ")}.`);
+    if (projectNames.length)
+      parts.push(`Selected projects include ${projectNames.join(" and ")}.`);
+    parts.push(
+      "Prefers open, maintainable engineering and hands-on problem solving.",
+    );
+    let result = parts.join(" ").replace(/\s+/g, " ").trim();
+    const words = result.split(/\s+/);
+    if (words.length > 60)
+      result =
+        words
+          .slice(0, 60)
+          .join(" ")
+          .replace(/[,:;—-]+$/, "") + ".";
+    return result;
   }
 
-  handleMouseMove(e) {
-    const rect = this.canvas.getBoundingClientRect();
-    this.mouse.x = e.clientX - rect.left;
-    this.mouse.y = e.clientY - rect.top;
-  }
-
-  animate() {
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-    this.particles.forEach((particle, index) => {
-      particle.x += particle.vx;
-      particle.y += particle.vy;
-
-      const dx = this.mouse.x - particle.x;
-      const dy = this.mouse.y - particle.y;
-      const distance = Math.sqrt(dx * dx + dy * dy);
-
-      if (distance < 100) {
-        const force = (100 - distance) / 100;
-        particle.vx += (dx / distance) * force * 0.01 * this.speed;
-        particle.vy += (dy / distance) * force * 0.01 * this.speed;
+  function renderEducation() {
+    const host = $("#education-list");
+    host.replaceChildren();
+    if (!education.length) {
+      host.innerHTML =
+        '<p class="muted">Education details are not configured in info.json yet.</p>';
+      return;
+    }
+    education.forEach((item) => {
+      const duration = item.duration;
+      const date =
+        typeof duration === "string"
+          ? duration
+          : [duration?.start, duration?.end].filter(Boolean).join(" — ");
+      const card = document.createElement("article");
+      card.className = "education-card";
+      const left = document.createElement("div"),
+        right = document.createElement("div");
+      const degree = document.createElement("h3");
+      degree.textContent =
+        [item.degree, item["field-of-study"] || item.stream]
+          .filter(Boolean)
+          .join(" · ") || "Education";
+      const school = document.createElement("p");
+      school.textContent = [item.college, item.university]
+        .filter(Boolean)
+        .join(" · ");
+      left.append(degree, school);
+      const dates = document.createElement("div");
+      dates.className = "education-date";
+      dates.textContent = date || "";
+      right.append(dates);
+      if (item.cgpa !== null && item.cgpa !== undefined && item.cgpa !== "") {
+        const score = document.createElement("p");
+        score.className = "education-cgpa";
+        score.textContent = `CGPA: ${item.cgpa}`;
+        right.append(score);
       }
-
-      if (particle.x < 0 || particle.x > this.canvas.width) particle.vx *= -1;
-      if (particle.y < 0 || particle.y > this.canvas.height) particle.vy *= -1;
-
-      particle.x = Math.max(0, Math.min(this.canvas.width, particle.x));
-      particle.y = Math.max(0, Math.min(this.canvas.height, particle.y));
-
-      this.ctx.beginPath();
-      this.ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-      this.ctx.fillStyle =
-        particle.color +
-        Math.floor(particle.opacity * 255)
-          .toString(16)
-          .padStart(2, "0");
-      this.ctx.fill();
-
-      this.particles.forEach((otherParticle, otherIndex) => {
-        if (index !== otherIndex) {
-          const dx = particle.x - otherParticle.x;
-          const dy = particle.y - otherParticle.y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-
-          if (distance < 100) {
-            this.ctx.beginPath();
-            this.ctx.moveTo(particle.x, particle.y);
-            this.ctx.lineTo(otherParticle.x, otherParticle.y);
-            this.ctx.strokeStyle = `rgba(0, 255, 255, ${
-              ((100 - distance) / 100) * 0.2
-            })`;
-            this.ctx.lineWidth = 1;
-            this.ctx.stroke();
+      card.append(left, right);
+      host.append(card);
+    });
+  }
+  async function syncAcademicData() {
+    const config = settings?.ACADEMIC_DATA;
+    if (
+      !config?.spreadsheetId ||
+      config.provider !== "googleSheetsPublishedCsv"
+    )
+      return;
+    const field = config.fields?.BTech;
+    if (!field?.sheet || !field?.cell || !education[0]) return;
+    const cacheKey = `academic-cache:${config.spreadsheetId}:${field.sheet}:${field.cell}`;
+    const cached = (() => {
+      try {
+        return JSON.parse(localStorage.getItem(cacheKey) || "null");
+      } catch {
+        return null;
+      }
+    })();
+    if (cached && cached.value !== undefined && cached.value !== null)
+      education[0].cgpa = cached.value;
+    const status = $("#academic-status");
+    // Public sheet must be published to CSV. The cell coordinate is mapped to a CSV row/column.
+    const cellToIndex = (cell) => {
+      const m = /^([A-Z]+)(\d+)$/i.exec(cell || "");
+      if (!m) return null;
+      let col = 0;
+      for (const c of m[1].toUpperCase()) col = col * 26 + c.charCodeAt(0) - 64;
+      return { row: Number(m[2]) - 1, col: col - 1 };
+    };
+    const index = cellToIndex(field.cell);
+    if (!index) {
+      if (status)
+        status.textContent =
+          "Academic data mapping needs a valid spreadsheet cell.";
+      return;
+    }
+    const gid = field.gid ?? config.gid;
+    const url =
+      gid !== undefined
+        ? `https://docs.google.com/spreadsheets/d/${encodeURIComponent(config.spreadsheetId)}/export?format=csv&gid=${encodeURIComponent(gid)}`
+        : `https://docs.google.com/spreadsheets/d/${encodeURIComponent(config.spreadsheetId)}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(field.sheet)}`;
+    try {
+      const response = await fetch(url, { mode: "cors", cache: "no-store" });
+      if (!response.ok) throw new Error("Sheet is not publicly readable");
+      const csv = await response.text();
+      if (/<!doctype html|<html/i.test(csv))
+        throw new Error("Google Sheets returned a page instead of CSV data");
+      const rows = parseCSV(csv),
+        value = rows[index.row]?.[index.col];
+      const number = Number(
+        String(value ?? "")
+          .replace(/,/g, "")
+          .trim(),
+      );
+      if (
+        value === undefined ||
+        String(value).trim() === "" ||
+        !Number.isFinite(number)
+      )
+        throw new Error("Configured cell has no numeric value");
+      education[0].cgpa = Number(
+        number.toFixed(Number(field.displayPrecision ?? 2)),
+      );
+      localStorage.setItem(
+        cacheKey,
+        JSON.stringify({ value: education[0].cgpa, updatedAt: Date.now() }),
+      );
+      if (status)
+        status.textContent = `Academic data synced from Google Sheets · ${new Date().toLocaleString()}`;
+    } catch (error) {
+      if (status)
+        status.textContent = cached
+          ? "Showing the last cached academic value; live sync was unavailable."
+          : "Live CGPA sync is not available. Check that the sheet is publicly published and the tab/cell mapping is correct.";
+      console.info("Academic data sync skipped:", error.message);
+    }
+    renderEducation();
+  }
+  function parseCSV(text) {
+    const rows = [];
+    let row = [],
+      value = "",
+      quoted = false;
+    for (let i = 0; i < text.length; i++) {
+      const c = text[i];
+      if (quoted) {
+        if (c === '"' && text[i + 1] === '"') {
+          value += '"';
+          i++;
+        } else if (c === '"') quoted = false;
+        else value += c;
+      } else if (c === '"') quoted = true;
+      else if (c === ",") {
+        row.push(value);
+        value = "";
+      } else if (c === "\n") {
+        row.push(value.replace(/\r$/, ""));
+        rows.push(row);
+        row = [];
+        value = "";
+      } else value += c;
+    }
+    if (value.length || row.length) {
+      row.push(value.replace(/\r$/, ""));
+      rows.push(row);
+    }
+    return rows;
+  }
+  function renderSkills() {
+    const host = $("#skills-list");
+    host.replaceChildren();
+    Object.entries(skills).forEach(([category, items]) => {
+      const card = document.createElement("article");
+      card.className = "skill-card";
+      const title = document.createElement("h3");
+      title.textContent = category;
+      const list = document.createElement("div");
+      list.className = "skill-list";
+      (Array.isArray(items) ? items : []).forEach((item) => {
+        const chip = document.createElement("span");
+        chip.className = "skill-chip";
+        chip.textContent = item;
+        list.append(chip);
+      });
+      card.append(title, list);
+      host.append(card);
+    });
+  }
+  function renderProjects() {
+    const host = $("#projects-list");
+    host.replaceChildren();
+    projects.forEach((project, index) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "project-card";
+      button.setAttribute(
+        "aria-label",
+        `View details for ${project.name || "project"}`,
+      );
+      const art = document.createElement("div");
+      art.className = "project-art";
+      const number = document.createElement("span");
+      number.textContent = `PROJECT / ${String(index + 1).padStart(2, "0")}`;
+      const symbol = document.createElement("span");
+      symbol.className = "project-symbol";
+      symbol.textContent = ["⌘", "⌁", "⌬", "⟡"][index % 4];
+      art.append(number, symbol);
+      const body = document.createElement("div");
+      body.className = "project-body";
+      const title = document.createElement("strong");
+      title.className = "project-title";
+      title.textContent = project.name || "Untitled project";
+      const description = document.createElement("p");
+      description.className = "project-description";
+      description.textContent = project.description || "";
+      body.append(title, description);
+      const footer = document.createElement("div");
+      footer.className = "project-footer";
+      const kind = document.createElement("span");
+      kind.textContent =
+        (project.technologies || []).slice(0, 3).join(" / ") || "ENGINEERING";
+      const more = document.createElement("span");
+      more.textContent = "VIEW DETAILS ↗";
+      footer.append(kind, more);
+      button.append(art, body, footer);
+      button.addEventListener("click", () => openProject(project, index));
+      host.append(button);
+    });
+    if (!projects.length)
+      host.innerHTML =
+        '<p class="muted">Projects will appear here when added to info.json.</p>';
+  }
+  function openProject(project, index) {
+    const dialog = $("#project-dialog"),
+      host = $("#project-dialog-content");
+    host.replaceChildren();
+    const label = document.createElement("p");
+    label.className = "dialog-project-number";
+    label.textContent = `PROJECT / ${String(index + 1).padStart(2, "0")}`;
+    const title = document.createElement("h2");
+    title.textContent = project.name || "Project";
+    const description = document.createElement("p");
+    description.className = "dialog-project-description";
+    description.textContent =
+      project["long-description"] ||
+      project.description ||
+      "No description available.";
+    host.append(label, title, description);
+    const tech = project.technologies || [];
+    if (tech.length) {
+      const p = document.createElement("p");
+      p.className = "muted";
+      p.textContent = `TECHNOLOGIES · ${tech.join(" · ")}`;
+      host.append(p);
+    }
+    const url = safeUrl(project.url);
+    if (url) {
+      const link = document.createElement("a");
+      link.className = "dialog-project-link";
+      link.href = url;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.textContent = "Open project ↗";
+      host.append(link);
+    }
+    if (typeof dialog.showModal === "function") dialog.showModal();
+    else dialog.setAttribute("open", "");
+  }
+  function renderCommunity() {
+    const list = $("#memberships-list");
+    list.replaceChildren();
+    memberships.forEach((item) => {
+      const li = document.createElement("li");
+      li.textContent =
+        typeof item === "string"
+          ? item
+          : [item.name, item.organization].filter(Boolean).join(" · ");
+      list.append(li);
+    });
+    const languageHost = $("#languages-list");
+    languageHost.replaceChildren();
+    languages.forEach((item) => {
+      const span = document.createElement("span");
+      span.textContent = item;
+      languageHost.append(span);
+    });
+    if (!memberships.length)
+      list.innerHTML =
+        "<li>Add community memberships in info.json to show them here.</li>";
+    if (!languages.length)
+      languageHost.innerHTML = "<span>Languages not configured</span>";
+  }
+  function normalizeEmail(value) {
+    return String(value || "")
+      .trim()
+      .replace(/^mailto:/i, "")
+      .split(/[?;]/, 1)[0];
+  }
+  function renderContact() {
+    const email = normalizeEmail(
+      contact.email || contact.socials?.email?.url || "",
+    );
+    $("#contact-description").textContent =
+      contact.message ||
+      contact["contact-text"] ||
+      "Reach out for engineering conversations, open-source collaboration, and robotics projects.";
+    const emailHost = $("#email-address");
+    emailHost.replaceChildren();
+    if (email) {
+      const a = document.createElement("a");
+      a.href = `mailto:${email}`;
+      a.textContent = email;
+      a.className = "email-address";
+      emailHost.append(a);
+    }
+    const host = $("#social-links");
+    host.replaceChildren();
+    Object.entries(contact.socials || {}).forEach(([name, item]) => {
+      const url = safeUrl(typeof item === "string" ? item : item.url);
+      if (!url) return;
+      const a = document.createElement("a");
+      a.className = "social-link";
+      a.href = url;
+      a.target = url.startsWith("mailto:") ? "" : "_blank";
+      a.rel = "noopener noreferrer";
+      a.textContent =
+        name === "x" ? "X" : name.charAt(0).toUpperCase() + name.slice(1);
+      host.append(a);
+    });
+    $("#contact-form").addEventListener("submit", (event) => {
+      event.preventDefault();
+      if (!email) {
+        announce("Contact email is not configured in assets/info.json.");
+        return;
+      }
+      const name = $("#name").value.trim(),
+        sender = $("#email").value.trim(),
+        message = $("#message").value.trim();
+      const subject = encodeURIComponent(`Portfolio enquiry from ${name}`);
+      const body = encodeURIComponent(
+        `Name: ${name}\nReply email: ${sender}\n\n${message}`,
+      );
+      const mailto = `mailto:${email}?subject=${subject}&body=${body}`;
+      announce("Opening your email application…");
+      // Navigate directly from the user gesture; synthetic clicks on hidden anchors are blocked by some browsers.
+      window.location.href = mailto;
+    });
+  }
+  function assessRole(role) {
+    const searchable = [
+      ...Object.keys(skills),
+      ...Object.values(skills).flat(),
+      ...projects.map(
+        (p) =>
+          `${p.name || ""} ${p.description || ""} ${(p.technologies || []).join(" ")}`,
+      ),
+      ...education.map(
+        (e) =>
+          `${e.degree || ""} ${e["field-of-study"] || ""} ${e.stream || ""}`,
+      ),
+      ...memberships.map((m) =>
+        typeof m === "string" ? m : `${m.name || ""} ${m.organization || ""}`,
+      ),
+    ]
+      .join(" ")
+      .toLowerCase();
+    const normalizedRole = role.toLowerCase().trim();
+    const roleWords = normalizedRole
+      .split(/[^a-z0-9+#.]+/)
+      .filter(
+        (w) =>
+          w.length > 2 &&
+          ![
+            "engineer",
+            "engineering",
+            "developer",
+            "development",
+            "junior",
+            "senior",
+            "associate",
+            "intern",
+            "the",
+            "and",
+            "for",
+            "with",
+            "role",
+            "job",
+            "teacher",
+          ].includes(w),
+      );
+    const matched = roleWords.filter((w) => searchable.includes(w));
+    const roleFamilies = {
+      engineering: [
+        "embedded",
+        "firmware",
+        "robotics",
+        "microcontroller",
+        "electronics",
+        "pcb",
+        "linux",
+        "python",
+        "c++",
+        "computer vision",
+        "opencv",
+        "iot",
+        "frontend",
+        "backend",
+        "machine learning",
+        "software",
+        "hardware",
+        "control",
+        "autonomous",
+        "systems",
+        "developer",
+        "programmer",
+      ],
+      teaching: [
+        "teacher",
+        "teaching",
+        "education",
+        "instructor",
+        "tutor",
+        "curriculum",
+        "classroom",
+        "pedagogy",
+      ],
+      history: [
+        "history",
+        "historian",
+        "historical",
+        "archives",
+        "archival",
+        "social studies",
+      ],
+    };
+    const roleTerms = Object.values(roleFamilies)
+      .flat()
+      .filter((term) => normalizedRole.includes(term));
+    const profileSkills = Object.values(skills)
+      .flat()
+      .map((s) => String(s).toLowerCase());
+    const mapped = roleTerms.filter(
+      (term) =>
+        profileSkills.some(
+          (skill) => skill.includes(term) || term.includes(skill),
+        ) ||
+        projects.some((p) =>
+          `${p.name || ""} ${p.description || ""} ${(p.technologies || []).join(" ")}`
+            .toLowerCase()
+            .includes(term),
+        ),
+    );
+    const isTeachingRole =
+      /\b(teacher|teaching|educator|instructor|tutor)\b/.test(normalizedRole);
+    const isHistoryRole =
+      /\b(history|historian|historical|social studies|archivist)\b/.test(
+        normalizedRole,
+      );
+    const hasTeachingEvidence =
+      /teaching|education|instructor|tutor|pedagog|curriculum|classroom/.test(
+        searchable,
+      );
+    const hasHistoryEvidence =
+      /history|historian|historical|archive|social studies/.test(searchable);
+    const clearlyNonmatching =
+      (isTeachingRole && !hasTeachingEvidence) ||
+      (isHistoryRole && !hasHistoryEvidence);
+    let level = "poor",
+      headline = "Limited documented overlap";
+    if (
+      !clearlyNonmatching &&
+      roleTerms.length &&
+      mapped.length / roleTerms.length >= 0.5
+    ) {
+      level = "good";
+      headline = "Good apparent match";
+    } else if (
+      !clearlyNonmatching &&
+      (matched.length >= 1 || mapped.length >= 1)
+    ) {
+      level = "partial";
+      headline = "Partial documented match";
+    }
+    const notes = [];
+    if (
+      clearlyNonmatching ||
+      (roleTerms.length === 0 && matched.length === 0)
+    ) {
+      notes.push(
+        `The profile does not currently document clear evidence for “${role}”. Consider adding relevant, truthful experience or qualifications before using this CV for that role.`,
+      );
+    }
+    if (roleTerms.length) {
+      const gaps = roleTerms.filter((t) => !mapped.includes(t));
+      if (gaps.length)
+        notes.push(
+          `Not clearly documented in the profile: ${gaps.join(", ")}.`,
+        );
+    } else if (!clearlyNonmatching)
+      notes.push(
+        "This role title uses terms the keyword assessor does not fully recognize; review the profile manually.",
+      );
+    notes.push(
+      "This is a simple evidence/keyword check, not a hiring prediction. Missing information means undocumented, not necessarily absent. You can still preview the CV.",
+    );
+    return { level, headline, notes };
+  }
+  function renderCV(role) {
+    const assessment = assessRole(role),
+      box = $("#cv-assessment");
+    box.hidden = false;
+    box.dataset.level = assessment.level;
+    box.replaceChildren();
+    const heading = document.createElement("strong");
+    heading.textContent = assessment.headline;
+    box.append(heading);
+    const ul = document.createElement("ul");
+    assessment.notes.forEach((note) => {
+      const li = document.createElement("li");
+      li.textContent = note;
+      ul.append(li);
+    });
+    box.append(ul);
+    const profile = currentProfile;
+    const name = profile.name || "Candidate",
+      title = profile.title || "Embedded Systems Engineer";
+    const email = normalizeEmail(
+        contact.email || contact.socials?.email?.url || "",
+      ),
+      socials = Object.entries(contact.socials || {})
+        .filter(([k]) => k !== "email")
+        .map(([k, v]) => `${k}: ${typeof v === "string" ? v : v.url || ""}`)
+        .filter((x) => !x.endsWith(": "));
+    const about = buildShortDescription(profile);
+    const skillSections = Object.entries(skills);
+    const educationHTML = education
+      .map(
+        (e) =>
+          `<h4>${escapeHTML([e.degree, e["field-of-study"] || e.stream].filter(Boolean).join(" · "))}</h4><p class="cv-muted">${escapeHTML([e.college, e.university].filter(Boolean).join(" · "))} · ${escapeHTML(typeof e.duration === "string" ? e.duration : [e.duration?.start, e.duration?.end].filter(Boolean).join(" — "))}${e.cgpa !== undefined && e.cgpa !== null && e.cgpa !== "" ? ` · CGPA: ${escapeHTML(e.cgpa)}` : ""}</p>`,
+      )
+      .join("");
+    const projectHTML = projects
+      .map(
+        (p) =>
+          `<h4>${escapeHTML(p.name)}</h4><p>${escapeHTML(p.description || "")}</p>`,
+      )
+      .join("");
+    const skillsHTML = skillSections
+      .map(
+        ([category, items]) =>
+          `<h4>${escapeHTML(category)}</h4><p>${escapeHTML((Array.isArray(items) ? items : []).join(" · "))}</p>`,
+      )
+      .join("");
+    const memberHTML = memberships
+      .map((m) =>
+        escapeHTML(
+          typeof m === "string"
+            ? m
+            : [m.name, m.organization].filter(Boolean).join(" · "),
+        ),
+      )
+      .join("<br>");
+    const cv = `<article class="cv-sheet"><header class="cv-header"><h2>${escapeHTML(name)}</h2><p>${escapeHTML(role)} · ${escapeHTML(title)}</p><p>${escapeHTML([email, contact.phone, contact.location].filter(Boolean).join(" | "))}</p><p>${escapeHTML(socials.join(" | "))}</p></header><div class="cv-columns"><aside><h3>Skills</h3>${skillsHTML}<h3>Community</h3><p>${memberHTML || "Not listed"}</p><h3>Languages</h3><p>${escapeHTML(languages.join(" · "))}</p></aside><div><h3>Professional Summary</h3><p>${escapeHTML(about)}</p><h3>Education</h3>${educationHTML || "<p>Education not configured.</p>"}<h3>Projects</h3>${projectHTML || "<p>Projects not configured.</p>"}</div></div></article>`;
+    $("#cv-preview").innerHTML = cv;
+    $("#cv-preview").hidden = false;
+    $("#print-cv").disabled = false;
+    $("#close-cv").hidden = false;
+    announce("CV preview generated.");
+  }
+  let currentProfile = {};
+  function setupCV() {
+    $("#generate-cv").addEventListener("click", () => {
+      const role = $("#cv-role").value.trim();
+      if (!role) {
+        $("#cv-role").focus();
+        $("#cv-assessment").hidden = false;
+        $("#cv-assessment").textContent = "Enter a target job role first.";
+        return;
+      }
+      renderCV(role);
+    });
+    $("#cv-role").addEventListener("keydown", (event) => {
+      if (event.key === "Enter") $("#generate-cv").click();
+    });
+    $("#print-cv").addEventListener("click", () => window.print());
+    $("#close-cv").addEventListener("click", () => {
+      $("#cv-preview").hidden = true;
+      $("#cv-assessment").hidden = true;
+      $("#print-cv").disabled = true;
+      $("#close-cv").hidden = true;
+    });
+  }
+  function startParticles() {
+    const canvas = $("#particleAccelerator"),
+      ctx = canvas?.getContext("2d");
+    if (
+      !canvas ||
+      !ctx ||
+      settings?.ANIMATIONS?.enabled === false ||
+      matchMedia("(prefers-reduced-motion: reduce)").matches
+    )
+      return;
+    const count = Math.min(55, settings?.PARTICLES?.count || 35),
+      particles = [];
+    let width = 0,
+      height = 0,
+      frame = 0;
+    const resize = () => {
+      width = canvas.width = innerWidth * devicePixelRatio;
+      height = canvas.height = innerHeight * devicePixelRatio;
+      canvas.style.width = innerWidth + "px";
+      canvas.style.height = innerHeight + "px";
+      ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+    };
+    resize();
+    for (let i = 0; i < count; i++)
+      particles.push({
+        x: Math.random() * innerWidth,
+        y: Math.random() * innerHeight,
+        vx: (Math.random() - 0.5) * 0.25,
+        vy: (Math.random() - 0.5) * 0.25,
+      });
+    const draw = () => {
+      ctx.clearRect(0, 0, innerWidth, innerHeight);
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < 0 || p.x > innerWidth) p.vx *= -1;
+        if (p.y < 0 || p.y > innerHeight) p.vy *= -1;
+        ctx.fillStyle = "rgba(54,214,208,.65)";
+        ctx.fillRect(p.x, p.y, 2, 2);
+        for (let j = i + 1; j < particles.length; j++) {
+          const q = particles[j],
+            dx = p.x - q.x,
+            dy = p.y - q.y,
+            d = Math.hypot(dx, dy);
+          if (d < 105) {
+            ctx.strokeStyle = `rgba(54,214,208,${(1 - d / 105) * 0.12})`;
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(q.x, q.y);
+            ctx.stroke();
           }
         }
-      });
-    });
-
-    requestAnimationFrame(() => this.animate());
-  }
-}
-
-// --- Render User Info ---
-function renderUserInfo(userInfo) {
-  document.getElementById("web-title").textContent = userInfo["user-name"];
-  document.getElementById("user-name").textContent = userInfo["user-name"];
-  document.getElementById("user-details").textContent =
-    userInfo["user-details"];
-  document.getElementById("user-short-description").textContent =
-    userInfo["user-short-description"];
-
-  const profilePicElement = document.getElementById("profile-pic");
-  if (profilePicElement && userInfo["profile-pic"]) {
-    profilePicElement.src = userInfo["profile-pic"];
-  }
-}
-
-// --- Render About Section ---
-function renderAbout(aboutText) {
-  const aboutDescription = document.getElementById("about-description");
-  if (aboutDescription && aboutText) {
-    aboutDescription.textContent = aboutText;
-  } else if (aboutDescription) {
-    aboutDescription.textContent = "No description available.";
-  }
-}
-
-// --- Render Skills Section ---
-function renderSkills(skills) {
-  const skillsListContainer = document.getElementById("skills-list");
-  if (skillsListContainer && skills) {
-    skillsListContainer.innerHTML = "";
-
-    // Get all categories
-    const categories = Object.keys(skills);
-
-    // Shuffle categories
-    for (let i = categories.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [categories[i], categories[j]] = [categories[j], categories[i]];
-    }
-
-    // Render each category
-    categories.forEach((category) => {
-      const skillCard = document.createElement("div");
-      skillCard.className = "skill-card";
-
-      // Category title
-      const skillType = document.createElement("h3");
-      skillType.className = "skill-type";
-      skillType.textContent = category;
-      skillCard.appendChild(skillType);
-
-      // Sub-skills list
-      const skillList = document.createElement("div");
-      skillList.className = "skill-list";
-
-      // Copy and shuffle skills
-      const subSkills = [...skills[category]];
-      for (let i = subSkills.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [subSkills[i], subSkills[j]] = [subSkills[j], subSkills[i]];
       }
-
-      // Render each skill
-      subSkills.forEach((skill) => {
-        const skillItem = document.createElement("span");
-        skillItem.textContent = skill;
-        skillList.appendChild(skillItem);
-      });
-
-      skillCard.appendChild(skillList);
-      skillsListContainer.appendChild(skillCard);
-    });
+      frame = requestAnimationFrame(draw);
+    };
+    const onResize = () => resize();
+    addEventListener("resize", onResize);
+    draw();
   }
-}
-// --- Render Projects Section ---
-function renderProjects(projects) {
-  const projectsContainer = document.getElementById("projects-list");
-  if (projectsContainer && projects && projects.length > 0) {
-    projectsContainer.innerHTML = "";
-
-    projects.forEach((project) => {
-      const projectButton = document.createElement("button");
-      projectButton.className = "project-card";
-
-      // Open the popup when the button is clicked, passing the project object
-      projectButton.onclick = () => {
-        projectPopup(project);
-      };
-
-      projectButton.innerHTML = `
-                ${
-                  project.image
-                    ? `<img src="${project.image}" alt="${project.name}" class="project-image" align="center"/>`
-                    : ""
-                }
-                <span class="project-title">${project.name}</span>
-                <div class="project-description">${
-                  project.description || project.descripton || ""
-                }</div>
-            `;
-
-      projectsContainer.appendChild(projectButton);
-    });
-  }
-}
-
-// --- Project Popup Functionality ---
-function projectPopup(project) {
-  const popup = document.getElementById("project-popup");
-  const popupContent = document.getElementById("project-popup-content");
-
-  if (project) {
-    // Open the popup and populate with project data
-    if (popup && popupContent) {
-      popupContent.innerHTML = `
-                <div class="popup-project-image-container">
-                    <img src="${project.image}" alt="${
-        project.name
-      }" class="popup-project-image">
-                </div>
-                <h2 class="popup-project-title">${project.name}</h2>
-                <p class="popup-project-long-description">${
-                  project["long-description"] || project.description
-                }</p>
-                ${
-                  project.link
-                    ? `<a href="${project.link}" target="_blank" class="popup-project-link-btn">Visit Project</a>`
-                    : ""
-                }
-            `;
-      popup.classList.add("visible");
-      document.body.classList.add("no-scroll");
-
-      // Add event listener to close the popup when clicking the background
-      popup.onclick = (event) => {
-        if (event.target === popup) {
-          projectPopup(); // Close the popup
-        }
-      };
-    }
-  } else {
-    // Close the popup
-    if (popup) {
-      popup.classList.remove("visible");
-      document.body.classList.remove("no-scroll");
-      // Remove the event listener to avoid memory leaks
-      popup.onclick = null;
-    }
-  }
-}
-
-// --- Render Contact Section (FIXED) ---
-function renderContact(contact) {
-  if (!contact) return;
-
-  // Helper function to format array data into valid SVG transform strings
-  const formatTransform = (key, value) => {
-    if (!Array.isArray(value)) return value || "";
-    if (key === "matrix") {
-      return `matrix(${value.join(",")})`;
-    }
-    // Assume other array transforms are simple translations (like the 'transform' key)
-    if (key === "transform") {
-      return `translate(${value.join(",")})`;
-    }
-    return "";
-  };
-
-  const contactDescription = document.getElementById("contact-description");
-  if (contactDescription) {
-    contactDescription.textContent = contact["contact-text"] || "";
-  }
-
-  const contactEmail = document.getElementById("email-address");
-  if (contactEmail && contact.socials && contact.socials.email) {
-    const mail = document.createElement("span");
-    mail.className = "mail-id";
-    mail.textContent = contact.socials.email.url;
-    contactEmail.innerHTML = "Email: ";
-    contactEmail.appendChild(mail);
-  }
-
-  const socialLinksContainer = document.getElementById("social-links");
-  if (socialLinksContainer && contact.socials) {
-    socialLinksContainer.innerHTML = "";
-
-    Object.entries(contact.socials).forEach(([key, value]) => {
-      if (key === "email") return;
-
-      const socialButton = document.createElement("button");
-      socialButton.className = "social-link";
-      socialButton.title = key;
-
-      socialButton.onclick = () => {
-        window.open(value.url, "_blank", "noopener,noreferrer");
-      };
-
-      // 1. Create the new wrapper div
-      const btnContentDiv = document.createElement("div");
-      btnContentDiv.className = "btn-content";
-
-      // 2. Create the SVG element
-      const iconSVG = document.createElementNS(
-        "http://www.w3.org/2000/svg",
-        "svg"
+  async function main() {
+    setupTheme();
+    setupNavigation();
+    setupCV();
+    try {
+      const [rawInfo, rawSettings] = await Promise.all([
+        fetchJSON("assets/info.json"),
+        fetchJSON("assets/settings.json"),
+      ]);
+      settings = rawSettings;
+      const normalized = normalizeData(rawInfo, rawSettings);
+      currentProfile = normalized.profile;
+      renderProfile(currentProfile);
+      renderEducation();
+      renderSkills();
+      renderProjects();
+      renderCommunity();
+      renderContact();
+      startParticles();
+      await syncAcademicData();
+    } catch (error) {
+      console.error("Portfolio initialization failed:", error);
+      $("#user-short-description").textContent =
+        "Portfolio data could not be loaded. Serve this site over HTTP and check assets/info.json and assets/settings.json.";
+      announce("Portfolio data failed to load.");
+    } finally {
+      window.setTimeout(
+        hideLoadingScreen,
+        settings?.LOADING_SCREEN?.durationMs || 500,
       );
-      iconSVG.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-      iconSVG.setAttribute("class", "social-icon");
-      iconSVG.setAttribute("viewBox", value.icon.viewBox || "0 0 24 24");
-
-      // 3. Create the Outer G element (Mapped to 'matrix' data, now correctly formatted)
-      const outerG = document.createElementNS(
-        "http://www.w3.org/2000/svg",
-        "g"
-      );
-      if (value.icon.matrix) {
-        outerG.setAttribute(
-          "transform",
-          formatTransform("matrix", value.icon.matrix)
-        );
-      }
-
-      // 4. Create the Inner G element (Mapped to 'transform' data, now correctly formatted)
-      const innerG = document.createElementNS(
-        "http://www.w3.org/2000/svg",
-        "g"
-      );
-      if (value.icon.transform) {
-        innerG.setAttribute(
-          "transform",
-          formatTransform("transform", value.icon.transform)
-        );
-      }
-
-      // 5. Create the Path element
-      const pathElement = document.createElementNS(
-        "http://www.w3.org/2000/svg",
-        "path"
-      );
-      pathElement.setAttribute("d", value.icon.path || "");
-      pathElement.setAttribute("fill", "currentColor");
-
-      // 6. Assemble the elements
-      innerG.appendChild(pathElement);
-      outerG.appendChild(innerG);
-      iconSVG.appendChild(outerG);
-      btnContentDiv.appendChild(iconSVG);
-      socialButton.appendChild(btnContentDiv);
-      socialLinksContainer.appendChild(socialButton);
-    });
-  }
-}
-
-// --- Binding Enter Key to Submit Button ---
-function bindEnterKeyToSubmit() {
-  const form = document.getElementById("contact-form");
-  const submitButton = document.getElementById("submit");
-
-  if (form && submitButton) {
-    form.addEventListener("keydown", (event) => {
-      // Check if the pressed key is the Enter key
-      if (event.key === "Enter") {
-        // IMPORTANT: Prevent submission if the user is typing in the multiline message box (<textarea>)
-        if (event.target.tagName !== "TEXTAREA") {
-          event.preventDefault(); // Stop default form submission/page refresh
-          submitButton.click(); // Programmatically click the submit button
-        }
-      }
-    });
-  }
-}
-
-// --- Enable Card Animations on Scroll ---
-function enableCardAnimations() {
-  const canvas = document.getElementById("particleAccelerator");
-  if (canvas) {
-    // Ensure the background canvas doesn't block scrolling or clicks
-    canvas.style.pointerEvents = "none";
-    canvas.style.position = "fixed";
-    canvas.style.top = "0";
-    canvas.style.left = "0";
-    canvas.style.zIndex = "-1";
-  }
-}
-
-// --- Main App Function ---
-async function main() {
-  try {
-    // Fetch settings and info data
-    const settingsData = await fetchJSON("assets/settings.json");
-    const infoData = await fetchJSON("assets/info.json");
-
-    // Show loading screen
-    await showLoadingScreen(settingsData["loading-screen-settings"]);
-    hideLoadingScreen(settingsData["loading-screen-settings"]["time-limit"]);
-
-    // Render webpage icon
-    renderWebpageIcon(settingsData["icon"]);
-
-    // Initialize particle accelerator effect
-    const canvas = document.getElementById("particleAccelerator");
-    const particleSettings = settingsData["particle-acceletor"];
-    const animatedBg = settingsData["animated-bg"];
-
-    if (canvas && particleSettings && animatedBg === true) {
-      new ParticleAccelerator(canvas, particleSettings);
     }
-
-    // Render all sections
-    window.scrollTo(0, 0);
-    renderUserInfo(infoData["user-info"]);
-    renderAbout(infoData["user-info"]["about-me"]);
-    renderSkills(infoData.skills);
-    renderProjects(infoData.projects);
-    renderContact(infoData.contact);
-    bindEnterKeyToSubmit();
-
-    // Enable barrel roll animations
-    enableCardAnimations();
-  } catch (error) {
-    console.error("Error loading data:", error);
   }
-}
-
-// --- Run app on DOM load ---
-document.addEventListener("DOMContentLoaded", main);
+  $("#project-dialog-close").addEventListener("click", () =>
+    $("#project-dialog").close(),
+  );
+  $("#project-dialog").addEventListener("click", (event) => {
+    if (event.target === $("#project-dialog")) $("#project-dialog").close();
+  });
+  document.addEventListener("DOMContentLoaded", main);
+})();
