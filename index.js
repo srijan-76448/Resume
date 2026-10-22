@@ -149,6 +149,12 @@
     $("#user-short-description").textContent = shortDescription;
     $("#about-description").textContent =
       profile["about-me"] || "Profile details will be available soon.";
+    const focus = Array.isArray(info?.CURRENT_FOCUS) ? info.CURRENT_FOCUS : [];
+    const principle = Array.isArray(info?.WORKING_PRINCIPLE)
+      ? info.WORKING_PRINCIPLE
+      : [];
+    $("#current-focus").textContent = focus.join("\n");
+    $("#working-principle").textContent = principle.join("\n");
     $("#footer-name").textContent = name;
     $("#current-year").textContent = new Date().getFullYear();
   }
@@ -844,6 +850,7 @@
         fetchJSON("assets/info.json"),
         fetchJSON("assets/settings.json"),
       ]);
+      info = rawInfo;
       settings = rawSettings;
       const normalized = normalizeData(rawInfo, rawSettings);
       currentProfile = normalized.profile;
