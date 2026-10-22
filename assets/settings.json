@@ -1,44 +1,160 @@
 {
-  "animated-bg": true,
-  "cards": [
-    "Home",
-    "About",
-    "Skills",
-    "Projects",
-    "Contact Me"
-  ],
-  "icon": "assets/imgs/logo.webp",
-  "loading-screen-settings": {
-    "time-limit": 5000,
-    "messageList": [
-      "Finding the website's IP address.",
-      "Establishing a secure connection.",
-      "Sending the request for the webpage.",
-      "Receiving the rendering data.",
-      "Processing rendering data.",
-      "Building page layout with graphics.",
-      "Welcome to my portfolio...",
-      ""
-    ],
-    "cursor": "|"
+  "THEME": {
+    "mode": "dark",
+    "allowThemeToggle": true,
+    "accent": "#36D6D0",
+    "background": "#0B1014",
+    "surface": "#121B22",
+    "text": "#E8F0F2",
+    "mutedText": "#91A3AD"
   },
-  "particle-acceletor": {
-    "speed": 1.1,
-    "maxParticles": 100,
-    "no-of-particles": 100,
-    "max-particle-size": 3,
-    "min-particle-size": 0.5,
-    "particle-opacity": 50,
-    "colors": [
-      "#8a2be2",
-      "#39ff14",
-      "#ff0000",
-      "#ffff00",
-      "#00ffff",
-      "#0099ff",
-      "#ff00ff"
-    ]
+  "NAVIGATION": {
+    "sections": [
+      "HOME",
+      "ABOUT",
+      "EDUCATION",
+      "SKILLS",
+      "PROJECTS",
+      "MEMBERSHIPS",
+      "LANGUAGES",
+      "CONTACT"
+    ],
+    "sticky": true
+  },
+  "ANIMATIONS": {
+    "enabled": true,
+    "motionLevel": "subtle",
+    "respectReducedMotion": true
+  },
+  "LOADING_SCREEN": {
+    "enabled": true,
+    "durationMs": 1800,
+    "messages": [
+      "Initializing robotics portfolio...",
+      "Loading engineering profile...",
+      "Preparing project systems...",
+      "Portfolio ready."
+    ],
+    "cursor": "_"
+  },
+  "BRANDING": {
+    "logo": "assets/imgs/logo.webp",
+    "profileImage": "assets/imgs/pfp.jpg",
+    "pageTitleSuffix": " | Robotics & Embedded Systems"
+  },
+  "ACADEMIC_DATA": {
+    "provider": "googleSheetsPublishedCsv",
+    "spreadsheetId": "1IyFfYOmqpVw5fxjIpJbE31UIo5f2qS7g6j6hbJhichQ",
+    "fields": {
+      "BTech": {
+        "sheet": "BTech",
+        "cell": "K7",
+        "target": "EDUCATION[0].cgpa",
+        "format": "number",
+        "displayPrecision": 2
+      }
+    },
+    "refreshIntervalMinutes": 30,
+    "cacheLastValidValue": true,
+    "showLastUpdated": true,
+    "publicDataOnly": true
+  },
+  "AI": {
+    "enabled": true,
+    "provider": "configureBeforeUse",
+    "endpoint": "",
+    "model": "",
+    "apiKeyEnvironmentVariable": "AI_API_KEY",
+    "neverExposeApiKeyInBrowser": true,
+    "generation": {
+      "shortDescription": {
+        "enabled": true,
+        "source": [
+          "PROFILE.about-me",
+          "PROFILE.name",
+          "PROFILE.title",
+          "EDUCATION",
+          "SKILLS",
+          "PROJECTS",
+          "MEMBERSHIPS",
+          "LANGUAGES"
+        ],
+        "targetWordCount": {
+          "min": 50,
+          "max": 60
+        },
+        "cache": true,
+        "fallbackToLastValid": true
+      },
+      "portfolioSummary": {
+        "enabled": true,
+        "source": [
+          "PROFILE.about-me",
+          "EDUCATION",
+          "SKILLS",
+          "PROJECTS",
+          "MEMBERSHIPS"
+        ],
+        "cache": true,
+        "fallbackToLastValid": true
+      },
+      "cv": {
+        "enabled": true,
+        "jobRolePromptRequired": true,
+        "preserveVerifiedFactsOnly": true,
+        "allowUserToContinueAfterMismatchWarning": true,
+        "showJobFitAssessment": true,
+        "jobFitOutcomes": [
+          "goodMatch",
+          "partialMatch",
+          "poorOrUncertainMatch"
+        ],
+        "generateJobSpecificSummary": true,
+        "previewBeforeExport": true,
+        "exportFormat": [
+          "pdf"
+        ],
+        "layout": "twoColumn",
+        "onePagePreferred": true
+      }
+    }
+  },
+  "DATA_SYNC": {
+    "github": {
+      "enabled": false,
+      "refreshIntervalMinutes": 60,
+      "publicDataOnly": true
+    },
+    "failureBehavior": "retainLastValidData"
+  },
+  "PORTFOLIO": {
+    "shortDescriptionSource": "PROFILE.short-description",
+    "aboutMeSource": "PROFILE.about-me",
+    "projectStatusLabels": [
+      "PLANNED",
+      "IN_PROGRESS",
+      "COMPLETED",
+      "ON_HOLD"
+    ],
+    "showLastUpdated": true
+  },
+  "CV": {
+    "enabled": true,
+    "template": "tealTwoColumn",
+    "headerAccent": "#178C8C",
+    "pageSize": "A4",
+    "onePagePreferred": true,
+    "allowPreview": true,
+    "allowPdfExport": true
+  },
+  "ACCESSIBILITY": {
+    "respectReducedMotion": true,
+    "keyboardAccessible": true,
+    "visibleFocus": true
+  },
+  "PERFORMANCE": {
+    "lazyLoadImages": true,
+    "cacheGeneratedContent": true,
+    "avoidUnnecessaryApiCalls": true
   }
-
 }
-
