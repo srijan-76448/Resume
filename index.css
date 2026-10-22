@@ -1162,3 +1162,39 @@ h3 {
   letter-spacing: 0;
   line-height: 1.35;
 }
+/* CV links remain recognizable on screen and in printed/PDF output. */
+.cv-sheet a {
+  color: #126b70;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+  overflow-wrap: anywhere;
+}
+.cv-sheet a:hover {
+  color: #0a4f53;
+}
+.cv-project-url {
+  margin-top: 2px;
+  font-size: 0.65rem !important;
+}
+@media print {
+  .cv-sheet a {
+    color: #124f53 !important;
+    text-decoration: underline !important;
+  }
+}
+/* Links in the teal CV header must stay white for clear contrast. */
+.cv-sheet .cv-header a,
+.cv-sheet .cv-header a:hover,
+.cv-sheet .cv-header a:focus-visible {
+  color: #fff !important;
+  text-decoration-color: #fff !important;
+}
+@media print {
+  .cv-sheet .cv-header a,
+  .cv-sheet .cv-header a:hover,
+  .cv-sheet .cv-header a:focus-visible {
+    color: #fff !important;
+    text-decoration-color: #fff !important;
+  }
+}

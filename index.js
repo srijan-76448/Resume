@@ -817,12 +817,23 @@
     const name = profile.name || "Candidate",
       title = profile.title || "Embedded Systems Engineer";
     const email = normalizeEmail(
-        contact.email || contact.socials?.email?.url || "",
-      ),
-      socials = Object.entries(contact.socials || {})
-        .filter(([k]) => k !== "email")
-        .map(([k, v]) => `${k}: ${typeof v === "string" ? v : v.url || ""}`)
-        .filter((x) => !x.endsWith(": "));
+      contact.email || contact.socials?.email?.url || "",
+    );
+    const cvLink = (label, rawUrl) => {
+      const url = safeUrl(rawUrl);
+      return url
+        ? `<a href="${escapeHTML(url)}" target="${url.startsWith("mailto:") ? "_self" : "_blank"}" rel="noopener noreferrer">${escapeHTML(label || url)}</a>`
+        : escapeHTML(label || "");
+    };
+    const socialsHTML = Object.entries(contact.socials || {})
+      .filter(([k]) => k !== "email")
+      .map(([k, v]) => {
+        const url = typeof v === "string" ? v : v.url || "";
+        return url ? cvLink(k, url) : "";
+      })
+      .filter(Boolean)
+      .join(" · ");
+    const emailHTML = email ? cvLink(email, `mailto:${email}`) : "";
     const about = buildShortDescription(profile);
     const skillSections = Object.entries(skills);
     // CV intentionally omits all academic scores (CGPA, marks, percentages, and grades).
@@ -847,7 +858,7 @@
     const projectHTML = projects
       .map(
         (p) =>
-          `<h4>${escapeHTML(p.name)}</h4><p>${escapeHTML(p.description || "")}</p>`,
+          `<h4>${escapeHTML(p.name)}</h4><p>${escapeHTML(p.description || "")}</p>${safeUrl(p.url) ? `<p class="cv-project-url">${cvLink(p.url, p.url)}</p>` : ""}`,
       )
       .join("");
     const skillsHTML = skillSections
@@ -865,7 +876,17 @@
         ),
       )
       .join("<br>");
-    const cv = `<article class="cv-sheet"><header class="cv-header"><h2>${escapeHTML(name)}</h2><p>${escapeHTML(role)} · ${escapeHTML(title)}</p><p>${escapeHTML([email, contact.phone, contact.location].filter(Boolean).join(" | "))}</p><p>${escapeHTML(socials.join(" | "))}</p></header><div class="cv-columns"><aside><h3>Skills</h3>${skillsHTML}<h3>Community</h3><p>${memberHTML || "Not listed"}</p><h3>Languages</h3><p>${escapeHTML(languages.join(" · "))}</p></aside><div><h3>Professional Summary</h3><p>${escapeHTML(about)}</p><h3>Education</h3>${educationHTML || "<p>Education not configured.</p>"}${experienceHTML ? `<h3>Experience</h3>${experienceHTML}` : ""}${achievementsHTML ? `<h3>Achievements</h3>${achievementsHTML}` : ""}<h3>Projects</h3>${projectHTML || "<p>Projects not configured.</p>"}</div></div></article>`;
+    const phoneHTML = contact.phone
+      ? cvLink(
+          contact.phone,
+          `tel:${String(contact.phone).replace(/[^+0-9]/g, "")}`,
+        )
+      : "";
+    const locationHTML = escapeHTML(contact.location || "");
+    const contactLine = [emailHTML, phoneHTML, locationHTML]
+      .filter(Boolean)
+      .join(" · ");
+    const cv = `<article class="cv-sheet"><header class="cv-header"><h2>${escapeHTML(name)}</h2><p class="cv-target-role">${escapeHTML(role)}</p><p>${contactLine}</p><p>${socialsHTML}</p></header><div class="cv-columns"><aside><h3>Skills</h3>${skillsHTML}<h3>Community</h3><p>${memberHTML || "Not listed"}</p><h3>Languages</h3><p>${escapeHTML(languages.join(" · "))}</p></aside><div><h3>Professional Summary</h3><p>${escapeHTML(about)}</p><h3>Education</h3>${educationHTML || "<p>Education not configured.</p>"}${experienceHTML ? `<h3>Experience</h3>${experienceHTML}` : ""}${achievementsHTML ? `<h3>Achievements</h3>${achievementsHTML}` : ""}<h3>Projects</h3>${projectHTML || "<p>Projects not configured.</p>"}</div></div></article>`;
     $("#cv-preview").innerHTML = cv;
     $("#cv-preview").hidden = false;
     $("#print-cv").disabled = false;
