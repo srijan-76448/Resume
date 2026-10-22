@@ -227,10 +227,16 @@
       dates.className = "education-date";
       dates.textContent = date || "";
       right.append(dates);
-      if (item.cgpa !== null && item.cgpa !== undefined && item.cgpa !== "") {
+      // Public portfolio rule: show CGPA only when the numeric value is strictly above 6.5.
+      const cgpaValue = Number.parseFloat(String(item.cgpa ?? "").trim());
+      if (
+        String(item.cgpa ?? "").trim() !== "" &&
+        Number.isFinite(cgpaValue) &&
+        cgpaValue > 6.5
+      ) {
         const score = document.createElement("p");
         score.className = "education-cgpa";
-        score.textContent = `CGPA: ${item.cgpa}`;
+        score.textContent = `CGPA: ${cgpaValue}`;
         right.append(score);
       }
       card.append(left, right);
@@ -711,10 +717,11 @@
         .filter((x) => !x.endsWith(": "));
     const about = buildShortDescription(profile);
     const skillSections = Object.entries(skills);
+    // CV intentionally omits all academic scores (CGPA, marks, percentages, and grades).
     const educationHTML = education
       .map(
         (e) =>
-          `<h4>${escapeHTML([e.degree, e["field-of-study"] || e.stream].filter(Boolean).join(" · "))}</h4><p class="cv-muted">${escapeHTML([e.college, e.university].filter(Boolean).join(" · "))} · ${escapeHTML(typeof e.duration === "string" ? e.duration : [e.duration?.start, e.duration?.end].filter(Boolean).join(" — "))}${e.cgpa !== undefined && e.cgpa !== null && e.cgpa !== "" ? ` · CGPA: ${escapeHTML(e.cgpa)}` : ""}</p>`,
+          `<h4>${escapeHTML([e.degree, e["field-of-study"] || e.stream].filter(Boolean).join(" · "))}</h4><p class="cv-muted">${escapeHTML([e.college, e.university].filter(Boolean).join(" · "))} · ${escapeHTML(typeof e.duration === "string" ? e.duration : [e.duration?.start, e.duration?.end].filter(Boolean).join(" — "))}</p>`,
       )
       .join("");
     const projectHTML = projects
