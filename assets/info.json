@@ -26,12 +26,8 @@
       "description": "ISHA is a multi-layered, open-source framework that bridges complex philosophy and psychology with AI and Robotics to achieve autonomous, human-like reasoning and goal-oriented evolution.",
       "url": "https://isha.76448.org",
       "image": null,
-      "status": "Under Development",
-      "technologies": [
-        "Python",
-        "AI",
-        "ML"
-      ]
+      "status": null,
+      "technologies": []
     },
     {
       "name": "DevOS EcoSystem",
@@ -39,9 +35,7 @@
       "url": null,
       "image": null,
       "status": null,
-      "technologies": [
-        "Linux"
-      ]
+      "technologies": []
     },
     {
       "name": "The AVR/ESP Programmer Board",
@@ -53,8 +47,7 @@
         "AVR",
         "ESP",
         "ISP",
-        "UART",
-        "ATMEL"
+        "UART"
       ]
     }
   ],
@@ -166,5 +159,16 @@
       }
     },
     "message": "Feel free to reach out to me via email or connect with me on social media!"
-  }
+  },
+  "CURRENT_FOCUS": [
+    "Preparing for GATE 2027",
+    "Embedded systems and robotics",
+    "Bio-inspired flying robots and control systems",
+    "Building practical, open engineering projects"
+  ],
+  "WORKING_PRINCIPLE": [
+    "Understand the system.",
+    "Build the smallest useful version.",
+    "Test, measure, improve."
+  ]
 }

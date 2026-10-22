@@ -121,7 +121,7 @@
   },
   "DATA_SYNC": {
     "github": {
-      "enabled": false,
+      "enabled": true,
       "refreshIntervalMinutes": 60,
       "publicDataOnly": true
     },
