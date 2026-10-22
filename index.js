@@ -63,7 +63,7 @@
     projects = v2 ? rawInfo.PROJECTS || [] : rawInfo.projects || [];
     projects = projects.map((p) => ({
       ...p,
-      url: p.url || p.link || "",
+      url: typeof p.url === "string" ? p.url.trim() : "",
       description: p.description || p.descripton || "",
       image: p.image || "",
     }));
