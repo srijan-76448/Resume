@@ -28,6 +28,8 @@
     settings = null,
     projects = [],
     education = [],
+    experience = [],
+    achievements = [],
     skills = {},
     memberships = [],
     languages = [],
@@ -66,6 +68,10 @@
       image: p.image || "",
     }));
     education = v2 ? rawInfo.EDUCATION || [] : [];
+    experience =
+      v2 && Array.isArray(rawInfo.EXPERIENCE) ? rawInfo.EXPERIENCE : [];
+    achievements =
+      v2 && Array.isArray(rawInfo.ACHIEVEMENTS) ? rawInfo.ACHIEVEMENTS : [];
     skills = v2 ? rawInfo.SKILLS || {} : rawInfo.skills || {};
     memberships = v2 ? rawInfo.MEMBERSHIPS || [] : [];
     languages = v2 ? rawInfo.LANGUAGES || [] : [];
@@ -247,6 +253,94 @@
       }
       card.append(left, right);
       host.append(card);
+    });
+  }
+  function renderExperience() {
+    const host = $("#experience-list");
+    host.replaceChildren();
+    experience.forEach((item) => {
+      const card = document.createElement("article");
+      card.className = "education-card";
+      const left = document.createElement("div"),
+        right = document.createElement("div");
+      const title = document.createElement("h3");
+      title.textContent =
+        [item.position, item.company].filter(Boolean).join(" · ") ||
+        "Experience";
+      left.append(title);
+      if (item.description) {
+        const description = document.createElement("p");
+        description.textContent = item.description;
+        left.append(description);
+      }
+      const duration = item.duration;
+      const dates = document.createElement("div");
+      dates.className = "education-date";
+      dates.textContent =
+        typeof duration === "string"
+          ? duration
+          : [
+              duration?.start,
+              duration?.end || (duration?.start ? "Present" : ""),
+            ]
+              .filter(Boolean)
+              .join(" — ");
+      right.append(dates);
+      card.append(left, right);
+      host.append(card);
+    });
+    if (!experience.length)
+      host.innerHTML =
+        '<p class="muted">No professional experience has been added yet.</p>';
+  }
+  function renderAchievements() {
+    const host = $("#achievements-list");
+    host.replaceChildren();
+    achievements.forEach((item) => {
+      const entry = typeof item === "string" ? { title: item } : item;
+      const card = document.createElement("article");
+      card.className = "education-card";
+      const left = document.createElement("div"),
+        right = document.createElement("div");
+      const title = document.createElement("h3");
+      title.textContent =
+        entry.title || entry.name || entry.achievement || "Achievement";
+      left.append(title);
+      const details = [entry.organization, entry.category]
+        .filter(Boolean)
+        .join(" · ");
+      if (details) {
+        const meta = document.createElement("p");
+        meta.textContent = details;
+        left.append(meta);
+      }
+      if (entry.description) {
+        const description = document.createElement("p");
+        description.textContent = entry.description;
+        left.append(description);
+      }
+      const date = document.createElement("div");
+      date.className = "education-date";
+      date.textContent = entry.date || entry.year || "";
+      right.append(date);
+      card.append(left, right);
+      host.append(card);
+    });
+    if (!achievements.length)
+      host.innerHTML =
+        '<p class="muted">No achievements have been added yet.</p>';
+  }
+  function updateOptionalSections() {
+    // Empty optional sections should not occupy space or appear in the navigation.
+    const optional = [
+      { id: "experience", hasItems: experience.length > 0 },
+      { id: "achievements", hasItems: achievements.length > 0 },
+    ];
+    optional.forEach(({ id, hasItems }) => {
+      const section = document.getElementById(id);
+      const navLink = document.querySelector(`#site-nav a[href="#${id}"]`);
+      if (section) section.hidden = !hasItems;
+      if (navLink) navLink.hidden = !hasItems;
     });
   }
   async function syncAcademicData() {
@@ -548,6 +642,14 @@
         (e) =>
           `${e.degree || ""} ${e["field-of-study"] || ""} ${e.stream || ""}`,
       ),
+      ...experience.map(
+        (e) => `${e.position || ""} ${e.company || ""} ${e.description || ""}`,
+      ),
+      ...achievements.map((a) =>
+        typeof a === "string"
+          ? a
+          : `${a.title || a.name || a.achievement || ""} ${a.organization || ""} ${a.description || ""}`,
+      ),
       ...memberships.map((m) =>
         typeof m === "string" ? m : `${m.name || ""} ${m.organization || ""}`,
       ),
@@ -730,6 +832,18 @@
           `<h4>${escapeHTML([e.degree, e["field-of-study"] || e.stream].filter(Boolean).join(" · "))}</h4><p class="cv-muted">${escapeHTML([e.college, e.university].filter(Boolean).join(" · "))} · ${escapeHTML(typeof e.duration === "string" ? e.duration : [e.duration?.start, e.duration?.end].filter(Boolean).join(" — "))}</p>`,
       )
       .join("");
+    const experienceHTML = experience
+      .map(
+        (e) =>
+          `<h4>${escapeHTML([e.position, e.company].filter(Boolean).join(" · "))}</h4><p class="cv-muted">${escapeHTML(typeof e.duration === "string" ? e.duration : [e.duration?.start, e.duration?.end || (e.duration?.start ? "Present" : "")].filter(Boolean).join(" — "))}</p>${e.description ? `<p>${escapeHTML(e.description)}</p>` : ""}`,
+      )
+      .join("");
+    const achievementsHTML = achievements
+      .map((a) => {
+        const e = typeof a === "string" ? { title: a } : a;
+        return `<h4>${escapeHTML(e.title || e.name || e.achievement || "Achievement")}</h4><p>${escapeHTML([e.organization, e.date || e.year, e.description].filter(Boolean).join(" · "))}</p>`;
+      })
+      .join("");
     const projectHTML = projects
       .map(
         (p) =>
@@ -751,7 +865,7 @@
         ),
       )
       .join("<br>");
-    const cv = `<article class="cv-sheet"><header class="cv-header"><h2>${escapeHTML(name)}</h2><p>${escapeHTML(role)} · ${escapeHTML(title)}</p><p>${escapeHTML([email, contact.phone, contact.location].filter(Boolean).join(" | "))}</p><p>${escapeHTML(socials.join(" | "))}</p></header><div class="cv-columns"><aside><h3>Skills</h3>${skillsHTML}<h3>Community</h3><p>${memberHTML || "Not listed"}</p><h3>Languages</h3><p>${escapeHTML(languages.join(" · "))}</p></aside><div><h3>Professional Summary</h3><p>${escapeHTML(about)}</p><h3>Education</h3>${educationHTML || "<p>Education not configured.</p>"}<h3>Projects</h3>${projectHTML || "<p>Projects not configured.</p>"}</div></div></article>`;
+    const cv = `<article class="cv-sheet"><header class="cv-header"><h2>${escapeHTML(name)}</h2><p>${escapeHTML(role)} · ${escapeHTML(title)}</p><p>${escapeHTML([email, contact.phone, contact.location].filter(Boolean).join(" | "))}</p><p>${escapeHTML(socials.join(" | "))}</p></header><div class="cv-columns"><aside><h3>Skills</h3>${skillsHTML}<h3>Community</h3><p>${memberHTML || "Not listed"}</p><h3>Languages</h3><p>${escapeHTML(languages.join(" · "))}</p></aside><div><h3>Professional Summary</h3><p>${escapeHTML(about)}</p><h3>Education</h3>${educationHTML || "<p>Education not configured.</p>"}${experienceHTML ? `<h3>Experience</h3>${experienceHTML}` : ""}${achievementsHTML ? `<h3>Achievements</h3>${achievementsHTML}` : ""}<h3>Projects</h3>${projectHTML || "<p>Projects not configured.</p>"}</div></div></article>`;
     $("#cv-preview").innerHTML = cv;
     $("#cv-preview").hidden = false;
     $("#print-cv").disabled = false;
@@ -856,6 +970,9 @@
       currentProfile = normalized.profile;
       renderProfile(currentProfile);
       renderEducation();
+      renderExperience();
+      renderAchievements();
+      updateOptionalSections();
       renderSkills();
       renderProjects();
       renderCommunity();

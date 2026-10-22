@@ -52,6 +52,8 @@ This file contains the editable portfolio content. The V2 schema supports:
 - `CURRENT_FOCUS` — list of current priorities shown in the profile sidebar.
 - `WORKING_PRINCIPLE` — list of engineering principles shown in the profile sidebar.
 - `EDUCATION` — degree, institution, duration, and academic details.
+- `EXPERIENCE` — professional, internship, freelance, or other work experience. Use an empty array when there is no experience to list.
+- `ACHIEVEMENTS` — academic and non-academic achievements, awards, recognitions, and milestones.
 - `SKILLS` — skill categories and their items.
 - `PROJECTS` — projects curated by you.
 - `MEMBERSHIPS` — organizations and communities.
@@ -63,6 +65,10 @@ The JavaScript also supports the original V1 JSON shape for backward compatibili
 ### Projects
 
 Add, edit, or remove featured projects in the `PROJECTS` array in `assets/info.json`. Each entry can include a project name, description, longer description, technologies, and a URL. The site displays only the projects listed in this file. GitHub remains available as a profile/social link, but the portfolio does not fetch or copy pinned repositories automatically.
+
+### Optional sections: experience and achievements
+
+`EXPERIENCE` and `ACHIEVEMENTS` are optional arrays in `assets/info.json`. If either array is empty, its website section and navigation link are hidden. The generated CV includes each section only when the corresponding array has entries.
 
 ### `assets/settings.json`
 
@@ -93,3 +99,26 @@ Upload the site files to your static hosting provider, preserving the `assets/` 
 
 - Portfolio: <https://srijan.76448.org>
 - GitHub: <https://github.com/srijan-76448>
+
+<!-- 
+"EXPERIENCE": [
+  {
+    "company": "XYZ",
+    "position": "ABC Manager",
+    "duration": {
+      "start": "May, 2024",
+      "end": "June, 2025"
+    },
+    "description": "Optional description of responsibilities."
+  }
+],
+"ACHIEVEMENTS": [
+  {
+    "title": "Achievement title",
+    "organization": "Issuing organization",
+    "category": "Academic",
+    "date": "2026",
+    "description": "Details about the achievement."
+  }
+]
+ -->
