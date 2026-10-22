@@ -119,14 +119,6 @@
       }
     }
   },
-  "DATA_SYNC": {
-    "github": {
-      "enabled": true,
-      "refreshIntervalMinutes": 60,
-      "publicDataOnly": true
-    },
-    "failureBehavior": "retainLastValidData"
-  },
   "PORTFOLIO": {
     "shortDescriptionSource": "PROFILE.short-description",
     "aboutMeSource": "PROFILE.about-me",
