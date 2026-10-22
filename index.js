@@ -17,8 +17,10 @@
         })[ch],
     );
   const safeUrl = (value) => {
+    if (typeof value !== "string" || !value.trim()) return "";
     try {
-      const u = new URL(value, location.href);
+      const raw = value.trim();
+      const u = new URL(raw);
       return ["http:", "https:", "mailto:"].includes(u.protocol) ? u.href : "";
     } catch {
       return "";
@@ -858,7 +860,7 @@
     const projectHTML = projects
       .map(
         (p) =>
-          `<h4>${escapeHTML(p.name)}</h4><p>${escapeHTML(p.description || "")}</p>${safeUrl(p.url) ? `<p class="cv-project-url">${cvLink(p.url, p.url)}</p>` : ""}`,
+          `<h4>${escapeHTML(p.name)}</h4><p>${escapeHTML(p.description || "")}</p>`,
       )
       .join("");
     const skillsHTML = skillSections
